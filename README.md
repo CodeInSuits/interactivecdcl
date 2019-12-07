@@ -11,12 +11,7 @@ $ git clone...
 $ cd <>
 ```
 
-### DB
-```
-sudo -u postgres psql postgres
-```
 ### Server
-
 ```
 $ virtualenv -p python3 venv
 $ pip install -r requirements.txt
@@ -27,10 +22,7 @@ $ gunicorn app:app
 ```
 $ cd client
 $ npm install
-$ chmod +x run_dev.sh
-$ ./run_dev.sh
-```
-To build client app comment out `process.env.REACT_APP_USERS_SERVICE_URL` and run : `npm run build`
+To build client: `npm run build`
 
 To check the build directory on a static server :
 ```
@@ -39,24 +31,6 @@ $ python3 -m http.server
 ```
 
 ### Deployment on heroku
-Disable flask-CORS
-```
-$ heroku login ...
-$ heroku create <your-app-name>
-$ heroku addons:add heroku-postgresql:hobby-dev
-$ heroku run python
->>> import os
->>> os.environ.get('DATABASE_URL')
-```
-copy db_url to your app_config, and then:
-```
-$ heroku git:remote <your-app-name>
-$ git push heroku master
-$ heroku run python
->>> from app import db
->>> db.create_all()
->>> exit()
-```
 
 ## Resources
 
