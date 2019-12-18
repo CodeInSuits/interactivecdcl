@@ -1,17 +1,24 @@
 import axios from 'axios'
 
-export default (logMessage) => {
-  console.log(logMessage);
-  axios.get('/users/ping', {
-                  // params :{
-                  //     dataType: 'json'
-                  // }
-              })
-                  .then(function (response) {
-                      console.log('SUCCESS', response)
-                      alert('Hi lisa')
-                  })
-                  .catch(function (error) {
-                      console.log('ERROR', error)
-                  });
+export function pingServer(logMessage) {
+    console.log(logMessage);
+    axios.get('/ping')
+    .then(function (response) {
+        console.log('SUCCESS', response);
+    })
+    .catch(function (error) {
+        console.log('ERROR', error);
+    });
+}
+
+export function getDotStr() {
+    axios.get('/dotstr')
+    .then(function (response) {
+        console.log('SUCCESS', response);
+        return response.data.data;
+    })
+    .catch(function (error) {
+        console.log('ERROR', error);
+    });
+
 }

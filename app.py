@@ -7,15 +7,25 @@ app = Flask(__name__,
 
 # CORS(app)
 
+# home page
 @app.route('/')
 def root():
     return app.send_static_file('index.html')
 
-@app.route('/users/ping')
+# server ping for testing client server connection
+@app.route('/ping')
 def ping_pong():
     return jsonify({
         'status': 'success',
         'message': 'pong!'
+    })
+
+# test to send dot string to client for render 
+@app.route('/dotstr')
+def dot_str():
+    return jsonify({
+        'status': 'success',
+        'data': 'digraph  {a -> b}'
     })
 
 if __name__ == '__main__':
