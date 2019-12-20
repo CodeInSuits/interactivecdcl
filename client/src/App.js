@@ -1,29 +1,23 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3'
 import * as d3Graphviz from 'd3-graphviz';
-// import { getDotStr } from './utils/restClient'
-import axios from 'axios'
-
-// var dotStr = 'digraph  {a -> b}';
+import { getDotStr } from './utils/restClient'
+import Graph from './components/Graph'
 
 class App extends Component {
 
-  constructor(){
-    super();
-    this.state = {};
+  constructor(props){
+    super(props);
+    this.state = {
+      dotStr: '',
+    };
   }
-  setGraph() {
-    // const dotStr = getDotStr();
-    // console.log('DOT source =', dotStr);
-    axios.get('/dotstr')
-    .then(function (response) {
-        console.log('SUCCESS', response);
-        d3.select(".graph").graphviz().renderDot(response.data.data);
-    })
-    .catch(function (error) {
-        console.log('ERROR', error);
-    });
-    // d3.select(".graph").graphviz().renderDot(dotStr);
+  
+  async setGraph() {
+    const dotStr = await getDotStr();
+    console.log('DOT source =', dotStr);
+    this.setState({dotStr})
+    console.log(this.state.dotStr)
   }
 
   render() {
@@ -33,9 +27,10 @@ class App extends Component {
           <h1 className="App-title">Welcome to interactive CDCL</h1>
         </header>
         <script src="https://unpkg.com/viz.js@1.8.0/viz.js" type="javascript/worker"></script>
-
-        <div className="graph">
-        </div>
+        <Graph
+          dotStr={this.state.dotStr}
+        />
+        {this.state.dotStr}
         <button className="square" onClick={() => this.setGraph()}>
           {'Click me'}
         </button>

@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+// function that pings server for testing
 export function pingServer(logMessage) {
     console.log(logMessage);
     axios.get('/ping')
@@ -11,14 +12,13 @@ export function pingServer(logMessage) {
     });
 }
 
-export function getDotStr() {
-    axios.get('/dotstr')
-    .then(function (response) {
-        console.log('SUCCESS', response);
+// get a dot string from server for test rendering
+export async function getDotStr() {
+    try {
+        const response = await axios.get('/dotstr');
         return response.data.data;
-    })
-    .catch(function (error) {
-        console.log('ERROR', error);
-    });
-
+    }
+    catch (err) {
+        console.log('Error', err)
+    }
 }
