@@ -1,5 +1,5 @@
 # CDCL interactive solver
-A onepage react app served by flask, deployed easily on heroku. It is used to show the steps in SAT solver(CDCL algorithm).
+An react app served by flask, deployed easily on heroku. It is used to show the steps in SAT solver(CDCL algorithm).
 
 [Production ready example](https://interactivecdcl.herokuapp.com/)
 
