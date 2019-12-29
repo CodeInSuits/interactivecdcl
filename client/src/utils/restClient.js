@@ -22,3 +22,15 @@ export async function getDotStr() {
         console.log('Error', err)
     }
 }
+
+// send form data input to server 
+export async function postClauses(clauses) {
+    try {
+        const response = await axios.post('/clauses', clauses);
+        return response;
+    }
+    catch (err) {
+        console.log('Error', err)
+    }
+}
+ 

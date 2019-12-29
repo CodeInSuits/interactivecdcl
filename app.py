@@ -28,5 +28,19 @@ def dot_str():
         'data': 'digraph  {a -> b}'
     })
 
+# test to get form data from server
+@app.route('/clauses', methods=["POST"])
+def get_clauses():
+    req_data = request.get_json()
+    try:
+        if request.method == "POST":
+            return jsonify({
+            'status': 'success',
+            'data': req_data
+            })
+
+    except Exception as e:
+        return e
+
 if __name__ == '__main__':
     app.run()

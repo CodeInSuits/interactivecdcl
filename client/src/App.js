@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import * as d3 from 'd3'
-import * as d3Graphviz from 'd3-graphviz';
-import { getDotStr } from './utils/restClient';
-import Graph from './components/Graph';
-import { ClauseForm } from './components/Form';
-import { Grid, Row, Col, Button } from 'react-bootstrap';
+import { ClauseForm } from './components/ClauseForm';
+import ClauseNum from './components/ClauseNum';
+import ClauseVisualizer from './components/ClauseVisualizer';
 
 
 class App extends Component {
@@ -13,52 +10,29 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      dotStr: '',
+      currentStep: 0,
     };
   }
-  
-  async setGraph() {
-    const dotStr = await getDotStr();
-    console.log('DOT source =', dotStr);
-    this.setState({dotStr})
-    console.log(this.state.dotStr)
+
+  nextStep() {
+    this.setState({currentStep: this.state.currentStep+1});
+  }
+
+  prevStep() {
+    this.setState({currentStep: this.state.currentStep-1});
+  }
+
+  resetStep() {
+    this.setState({currentStep: 0});
   }
 
   render() {
     return (
-      <Grid className="App">
-        <Row>
-          <Col sm={3}>
-            <ClauseForm />
-          </Col>
-          <Col sm={9}>
-            <Graph
-              dotStr={this.state.dotStr}
-            />
-            { this.state.dotStr && <div className="graph-steps-container">
-              <div>
-                <Button bsStyle="primary">
-                  Prev cont
-                </Button>
-                <Button bsStyle="primary">
-                  Prev step
-                </Button>
-              </div>
-              <div>
-                <Button bsStyle="primary">
-                  Step
-                </Button>
-                <Button bsStyle="primary">
-                  Cont
-                </Button>
-              </div>
-            </div> }
-          </Col>
-        </Row>
-        <Button className="square" onClick={() => this.setGraph()}>
-          {'Click me'}
-        </Button>
-      </Grid>
+      <div className="graph-input-wrapper">
+        { this.state.currentStep == 0 && <ClauseNum onNextClick={() => this.nextStep()}/> }
+        { this.state.currentStep == 1 && <ClauseForm onNextClick={() => this.nextStep()} onPrevClick={() => this.prevStep()}/> }
+        { this.state.currentStep == 2 && <ClauseVisualizer onEditClauseClick={() => this.resetStep()}/> }
+      </div>
     );
   }
 }

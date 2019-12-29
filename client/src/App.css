@@ -20,7 +20,22 @@
   to { transform: rotate(360deg); }
 }
 
-.graph-steps-container {
+body {
+  background: rgb(53, 255, 105);
+  background: linear-gradient(0deg, rgba(53, 255, 105, 1) 0%, rgba(68, 204, 255, 1) 100%);
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+.graph-input-wrapper {
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 }
