@@ -11,10 +11,27 @@ $ git clone...
 $ cd <>
 ```
 
-### Server
+### Setting up virtual environment
+In the top level of interactivecdcl, run:
+
 ```
 $ virtualenv -p python3 venv
+$ source ./venv/bin/activate # to activate virtual environment
 $ pip install -r requirements.txt
+```
+
+If you run into issues with `requirements.txt` and get the message `Error: pg_config executable not found`, do the following:
+
+1. Download Postgres.app from https://postgresapp.com/
+2. With your virtual environment activated, run `export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"`
+3. Continue with installing `requirements.txt`
+
+Make sure to activate the virtual environment for all the following steps. To deactivate, simply run `deactivate`.
+
+### Server
+In the top level of interactivecdcl, run:
+
+```
 $ gunicorn app:app
 ```
 
@@ -22,6 +39,8 @@ $ gunicorn app:app
 ```
 $ cd client
 $ npm install
+```
+
 To build client: `npm run build`
 
 To check the build directory on a static server :
