@@ -8,8 +8,13 @@ from pkg.utils.constants import TRUE, FALSE, UNASSIGN
 from pkg.utils.exceptions import FileFormatError
 from pkg.utils.logger import set_logger
 
-logger = set_logger()
+DOT_DELIMITER = '; '
+DOT_NODE_FMT = '{} [label = "x{} @ {}"]'
 
+def make_node(node, decision_level):
+    return DOT_NODE_FMT.format(node, node, decision_level)
+
+logger = set_logger()
 
 class Solver:
 
@@ -25,6 +30,9 @@ class Solver:
         self.branching_history = {}  # level -> branched variable
         self.propagate_history = {}  # level -> propagate variables list
         self.branching_count = 0
+
+        # The following are used for constructing DOT graphs
+        self.graphs = []
 
     def run(self):
         start_time = time.time()
@@ -63,6 +71,8 @@ class Solver:
             if conf_cls is not None:
                 # there is conflict in unit propagation
                 logger.fine('implication nodes: \n%s', self.nodes)
+                self.graphs.append(self.make_conflict_graph())
+                logger.fine('self.graphs: %s', self.graphs)
                 lvl, learnt = self.conflict_analyze(conf_cls)
                 logger.info('level reset to %s', lvl)
                 logger.debug('learnt: %s', learnt)
@@ -90,6 +100,14 @@ class Solver:
             logger.debug('propagate variables: %s', self.propagate_history)
             logger.debug('learnts: \n%s', self.learnts)
         return True
+
+    def make_conflict_graph(self):
+        curr_graph = []
+        for node in self.nodes.values():
+            if node.value != UNASSIGN:
+                curr_graph.append(make_node(node.variable, node.level))
+        curr_graph.append('')
+        return DOT_DELIMITER.join(curr_graph)
 
     def preprocess(self):
         """ Injects before solving """
