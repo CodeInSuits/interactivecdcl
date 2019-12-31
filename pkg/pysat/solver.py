@@ -10,9 +10,13 @@ from pkg.utils.logger import set_logger
 
 DOT_DELIMITER = '; '
 DOT_NODE_FMT = '{} [label = "x{} @ {}"]'
+DOT_EDGE_FMT = '{} -> {} [label = "c{}"]'
 
 def make_node(node, decision_level):
     return DOT_NODE_FMT.format(node, node, decision_level)
+
+def make_edge(from_node, to_node, clause_num):
+    return DOT_EDGE_FMT.format(from_node, to_node, clause_num)
 
 logger = set_logger()
 
@@ -21,7 +25,7 @@ class Solver:
     def __init__(self, filename):
         logger.info('========= create pysat from %s =========', filename)
         self.filename = filename
-        self.cnf, self.vars = Solver.read_file(filename)
+        self.cnf, self.vars, self.numbered_clauses, self.curr_clause = Solver.read_file(filename)
         self.learnts = set()
         self.assigns = dict.fromkeys(list(self.vars), UNASSIGN)
         self.level = 0
@@ -33,6 +37,8 @@ class Solver:
 
         # The following are used for constructing DOT graphs
         self.graphs = []
+        # self.numbered_clauses
+        # self.curr_clause
 
     def run(self):
         start_time = time.time()
@@ -79,6 +85,8 @@ class Solver:
                 if lvl < 0:
                     return False
                 self.learnts.add(learnt)
+                self.numbered_clauses[learnt] = self.curr_clause
+                self.curr_clause += 1
                 self.backtrack(lvl)
                 self.level = lvl
             elif self.are_all_variables_assigned():
@@ -106,6 +114,10 @@ class Solver:
         for node in self.nodes.values():
             if node.value != UNASSIGN:
                 curr_graph.append(make_node(node.variable, node.level))
+                if node.parents:
+                    for parent in node.parents:
+                        clause = self.numbered_clauses[node.clause]
+                        curr_graph.append(make_edge(parent.variable, node.variable, clause))
         curr_graph.append('')
         return DOT_DELIMITER.join(curr_graph)
 
@@ -138,6 +150,8 @@ class Solver:
 
         literals = set()
         clauses = set()
+        numbered_clauses = dict()
+        curr_clause = 1
 
         for line in lines[1:]:
             if line[-1] != '0':
@@ -145,6 +159,8 @@ class Solver:
             clause = frozenset(map(int, line[:-1]))
             literals.update(map(abs, clause))
             clauses.add(clause)
+            numbered_clauses[clause] = curr_clause # TODO: assumes clauses unique, handle assumption
+            curr_clause += 1
 
         if len(literals) != count_literals or len(lines) - 1 != count_clauses:
             raise FileFormatError(
@@ -155,8 +171,10 @@ class Solver:
 
         logger.fine('clauses: %s', clauses)
         logger.fine('literals: %s', literals)
+        logger.fine('numbered clauses: %s', numbered_clauses)
+        logger.fine('current clause number: %s', curr_clause)
 
-        return clauses, literals
+        return clauses, literals, numbered_clauses, curr_clause
 
     def compute_value(self, literal):
         """
