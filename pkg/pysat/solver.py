@@ -10,10 +10,15 @@ from pkg.utils.logger import set_logger
 
 DOT_DELIMITER = '; '
 DOT_NODE_FMT = '{} [label = "x{} @ {}"]'
+DOT_CONFLICT_NODE = 'K'
+DOT_CONFLICT_FMT = '{} [label = "conflict (x{}) @ {}"]'
 DOT_EDGE_FMT = '{} -> {} [label = "c{}"]'
 
 def make_node(node, decision_level):
     return DOT_NODE_FMT.format(node, node, decision_level)
+
+def make_conflict_node(node, decision_level):
+    return DOT_CONFLICT_FMT.format(DOT_CONFLICT_NODE, node, decision_level)
 
 def make_edge(from_node, to_node, clause_num):
     return DOT_EDGE_FMT.format(from_node, to_node, clause_num)
@@ -230,17 +235,24 @@ class Solver:
 
     def update_graph(self, var, clause=None):
         node = self.nodes[var]
+        # Check if node has been assigned previously
+        isConflict = True if node.value != UNASSIGN else False
         node.value = self.assigns[var]
         node.level = self.level
 
         # update parents
         if clause:  # clause is None, meaning this is branching, no parents to update
+            clause_num = self.numbered_clauses[clause]
+            if isConflict:
+                # Make conflict node and add edge for conflicting values
+                self.curr_graph.append(make_conflict_node(node.variable, self.level))
+                self.curr_graph.append(make_edge(node.variable, DOT_CONFLICT_NODE, clause_num))
             for v in [abs(lit) for lit in clause if abs(lit) != var]:
                 node.parents.append(self.nodes[v])
                 self.nodes[v].children.append(node)
                 parent = self.nodes[v]
-                clause_num = self.numbered_clauses[clause]
-                self.curr_graph.append(make_edge(parent.variable, node.variable, clause_num))
+                thisNode = DOT_CONFLICT_NODE if isConflict else node.variable
+                self.curr_graph.append(make_edge(parent.variable, thisNode, clause_num))
             node.clause = clause
             logger.fine('node %s has parents: %s', var, node.parents)
 
