@@ -9,13 +9,14 @@ from pkg.utils.exceptions import FileFormatError
 from pkg.utils.logger import set_logger
 
 DOT_DELIMITER = '; '
-DOT_NODE_FMT = '{} [label = "x{} @ {}"]'
+DOT_NODE_FMT = '{} [label = "x{}={} @ {}"]'
 DOT_CONFLICT_NODE = 'K'
 DOT_CONFLICT_FMT = '{} [label = "conflict (x{}) @ {}"]'
 DOT_EDGE_FMT = '{} -> {} [label = "c{}"]'
 
-def make_node(node, decision_level):
-    return DOT_NODE_FMT.format(node, node, decision_level)
+def make_node(node, decision_level, value):
+    node_val = 'T' if value == TRUE else 'F'
+    return DOT_NODE_FMT.format(node, node, node_val, decision_level)
 
 def make_conflict_node(node, decision_level):
     return DOT_CONFLICT_FMT.format(DOT_CONFLICT_NODE, node, decision_level)
@@ -43,6 +44,7 @@ class Solver:
         # The following are used for constructing DOT graphs
         self.graphs = []
         self.curr_graph = []
+        self.curr_added_nodes = set()
         # self.numbered_clauses
         # self.curr_clause
 
@@ -119,11 +121,12 @@ class Solver:
 
     def make_conflict_graph(self):
         for node in self.nodes.values():
-            if node.value != UNASSIGN:
-                self.curr_graph.append(make_node(node.variable, node.level))
+            if node.value != UNASSIGN and node.variable not in self.curr_added_nodes:
+                self.curr_graph.append(make_node(node.variable, node.level, node.value))
         self.curr_graph.append('')
         graph = DOT_DELIMITER.join(self.curr_graph)
         self.curr_graph = []
+        self.curr_added_nodes = set()
         return graph
 
     def preprocess(self):
@@ -236,7 +239,13 @@ class Solver:
     def update_graph(self, var, clause=None):
         node = self.nodes[var]
         # Check if node has been assigned previously
-        isConflict = True if node.value != UNASSIGN else False
+        isConflict = False
+        if node.value != UNASSIGN:
+            isConflict = True
+        else:
+            # Make new dot node for this
+            self.curr_graph.append(make_node(node.variable, self.level, self.assigns[var]))
+            self.curr_added_nodes.add(node.variable)
         node.value = self.assigns[var]
         node.level = self.level
 
