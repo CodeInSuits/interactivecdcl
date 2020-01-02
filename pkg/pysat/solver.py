@@ -37,6 +37,7 @@ class Solver:
 
         # The following are used for constructing DOT graphs
         self.graphs = []
+        self.curr_graph = []
         # self.numbered_clauses
         # self.curr_clause
 
@@ -107,19 +108,18 @@ class Solver:
 
             logger.debug('propagate variables: %s', self.propagate_history)
             logger.debug('learnts: \n%s', self.learnts)
+        self.graphs.append(self.make_conflict_graph())
+        logger.fine('self.graphs: %s', self.graphs)
         return True
 
     def make_conflict_graph(self):
-        curr_graph = []
         for node in self.nodes.values():
             if node.value != UNASSIGN:
-                curr_graph.append(make_node(node.variable, node.level))
-                if node.parents:
-                    for parent in node.parents:
-                        clause = self.numbered_clauses[node.clause]
-                        curr_graph.append(make_edge(parent.variable, node.variable, clause))
-        curr_graph.append('')
-        return DOT_DELIMITER.join(curr_graph)
+                self.curr_graph.append(make_node(node.variable, node.level))
+        self.curr_graph.append('')
+        graph = DOT_DELIMITER.join(self.curr_graph)
+        self.curr_graph = []
+        return graph
 
     def preprocess(self):
         """ Injects before solving """
@@ -238,6 +238,9 @@ class Solver:
             for v in [abs(lit) for lit in clause if abs(lit) != var]:
                 node.parents.append(self.nodes[v])
                 self.nodes[v].children.append(node)
+                parent = self.nodes[v]
+                clause_num = self.numbered_clauses[clause]
+                self.curr_graph.append(make_edge(parent.variable, node.variable, clause_num))
             node.clause = clause
             logger.fine('node %s has parents: %s', var, node.parents)
 
