@@ -60,12 +60,15 @@ export function ClauseForm(props) {
         // debugForm: true
     });
 
+    // TODO: start with 1 clause and make button to add clauses
+    // TODO: define field="{}[0-9]+" as constant since it's also used in app.py
+
     return (
         <div>
             <Form>
                 <div>
                     <label>
-                    Clause1: <InputField field="clause" validate={fakeCheckValidClause} />
+                    Clause1: <InputField field="clause1" validate={fakeCheckValidClause} />
                     </label>
                     <label>
                     Clause2: <InputField field="clause2" validate={fakeCheckValidClause} />
