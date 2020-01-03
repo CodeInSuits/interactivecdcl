@@ -7,6 +7,28 @@ app = Flask(__name__,
 
 # CORS(app)
 
+'''
+Helper method
+'''
+# parse form input 
+def parse_form(form_data):
+    literals = set()
+    clauses = set()
+    numbered_clauses = dict()
+    curr_clause = 1
+    lines = [line.strip().split() for line in form_data.values()]
+    for line in lines:
+        clause = frozenset(map(int, line))
+        literals.update(map(abs, clause))
+        clauses.add(clause)
+        numbered_clauses[clause] = curr_clause # TODO: assumes clauses unique, handle assumption
+        curr_clause += 1
+    print(literals, clauses, numbered_clauses, curr_clause)
+    return clauses, literals, numbered_clauses, curr_clause
+
+'''
+Http route
+'''
 # home page
 @app.route('/')
 def root():
@@ -32,6 +54,7 @@ def dot_str():
 @app.route('/clauses', methods=["POST"])
 def get_clauses():
     req_data = request.get_json()
+    parse_form(req_data)
     try:
         if request.method == "POST":
             return jsonify({
