@@ -87,6 +87,7 @@ def get_clauses():
     print('req_data: ', req_data)
     clauses, literals, numbered_clauses, curr_clause = parse_form(req_data)
     solver = orderedSolver(None, clauses, literals, numbered_clauses, curr_clause)
+    solver.run()
     print('graphs generated: ', solver.graphs)
     try:
         if request.method == "POST":
