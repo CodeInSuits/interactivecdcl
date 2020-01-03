@@ -2,6 +2,11 @@ import React from "react";
 import { useForm, useField, splitFormProps } from "react-form";
 import { postClauses } from '../utils/restClient'
 
+// Regex expression for checking valid clauses w/ potential
+// whitespace at beginning or end. Check if it's valid with:
+// `validClause.test({ string clause })`
+let validClause = /^ *(?:not )?x\d+(?: or (?:not )?x\d+)* *$/;
+
 async function sendToServer(values) {
     console.log('input is ',values);
     const response = await postClauses(values);
