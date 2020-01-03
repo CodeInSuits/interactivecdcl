@@ -11,7 +11,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentStep: 0,
-      inputs: ['input-0']
+      inputs: []
     };
   }
 
@@ -28,13 +28,13 @@ class App extends Component {
   }
 
   appendInput() {
-    var newInput = `input-${this.state.inputs.length}`;
+    var newInput = `clause${this.state.inputs.length+2}`;
     this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]) }));
   }
 
-  removeInput(inputToRemove) {
-    this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]) }));
-  }
+  // removeInput(inputToRemove) {
+  //   this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]) }));
+  // }
 
   render() {
     return (
@@ -46,7 +46,6 @@ class App extends Component {
             onPrevClick={() => this.prevStep()} 
             inputs={this.state.inputs}
             onAddInput={() => this.appendInput()}
-            on
           /> 
         }
         { this.state.currentStep === 1 && <ClauseVisualizer onEditClauseClick={() => this.resetStep()}/> }
