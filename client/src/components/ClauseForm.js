@@ -70,16 +70,16 @@ export function ClauseForm(props) {
                     <label>
                     Clause1: <InputField field="clause1" validate={fakeCheckValidClause} />
                     </label>
-                    <label>
-                    Clause2: <InputField field="clause2" validate={fakeCheckValidClause} />
-                    </label>
-                    <label>
-                    Clause3: <InputField field="clause3" validate={fakeCheckValidClause} />
-                    </label>
+                    <div id="dynamicInput">
+                       {props.inputs.map(input => <label><InputField field={input} key={input} validate={fakeCheckValidClause} /></label>)}
+                   </div>
                 </div>
                 <div>
+                    <button onClick={props.onAddInput}>
+                        +
+                    </button>
                     <button type="submit" disabled={!canSubmit}>
-                    Submit
+                        Submit
                     </button>
                 </div>
 

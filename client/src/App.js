@@ -11,6 +11,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentStep: 0,
+      inputs: ['input-0']
     };
   }
 
@@ -26,12 +27,29 @@ class App extends Component {
     this.setState({currentStep: 0});
   }
 
+  appendInput() {
+    var newInput = `input-${this.state.inputs.length}`;
+    this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]) }));
+  }
+
+  removeInput(inputToRemove) {
+    this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]) }));
+  }
+
   render() {
     return (
       <div className="graph-input-wrapper">
-        { this.state.currentStep == 0 && <ClauseNum onNextClick={() => this.nextStep()}/> }
-        { this.state.currentStep == 1 && <ClauseForm onNextClick={() => this.nextStep()} onPrevClick={() => this.prevStep()}/> }
-        { this.state.currentStep == 2 && <ClauseVisualizer onEditClauseClick={() => this.resetStep()}/> }
+        {/* { this.state.currentStep === 0 && <ClauseNum onNextClick={() => this.nextStep()}/> } */}
+        { this.state.currentStep === 0 && 
+          <ClauseForm 
+            onNextClick={() => this.nextStep()} 
+            onPrevClick={() => this.prevStep()} 
+            inputs={this.state.inputs}
+            onAddInput={() => this.appendInput()}
+            on
+          /> 
+        }
+        { this.state.currentStep === 1 && <ClauseVisualizer onEditClauseClick={() => this.resetStep()}/> }
       </div>
     );
   }
