@@ -28,10 +28,17 @@ logger = set_logger()
 
 class Solver:
 
-    def __init__(self, filename):
-        logger.info('========= create pysat from %s =========', filename)
-        self.filename = filename
-        self.cnf, self.vars, self.numbered_clauses, self.curr_clause = Solver.read_file(filename)
+    def __init__(self, filename, cnf=None, lits=None, numbered_clauses=None, curr_clause=None):
+        if filename:
+            self.filename = filename
+            self.cnf, self.vars, self.numbered_clauses, self.curr_clause = Solver.read_file(filename)
+        else:
+            self.filename = 'user inputs' # Placeholder, use passed in data structures
+            self.cnf = cnf
+            self.vars = lits
+            self.numbered_clauses = numbered_clauses
+            self.curr_clause = curr_clause
+        logger.info('========= created pysat from %s =========', self.filename)
         self.learnts = set()
         self.assigns = dict.fromkeys(list(self.vars), UNASSIGN)
         self.level = 0

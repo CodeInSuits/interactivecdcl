@@ -2,6 +2,11 @@ from flask import Flask, request, jsonify
 import re
 from collections import deque
 
+from pkg.pysat import solver
+from pkg.pysat import branch_heuristics as solvers
+
+orderedSolver = solvers.OrderedChoiceSolver
+
 # set the project root directory as the static folder, you can set others.
 app = Flask(__name__,
             static_url_path='',
@@ -26,14 +31,12 @@ def parse_form(form_data):
     field_prefix = 'clause'
     for i in range(1, len(form_data) + 1):
         field = field_prefix + str(i)
-        print('processing field: ', field)
         # Split clause into atoms
         clause = form_data[field]
         atoms = [atom.strip() for atom in clause.split('or')]
         # Process current line/clause
         clause = deque()
         for atom in atoms:
-            print('processing atom: ', atom)
             negated = re.search(r'^not x(\d+)$', atom)
             literal = re.search(r'^x(\d+)$', atom)
             if negated:
@@ -82,7 +85,9 @@ def dot_str():
 def get_clauses():
     req_data = request.get_json()
     print('req_data: ', req_data)
-    parse_form(req_data)
+    clauses, literals, numbered_clauses, curr_clause = parse_form(req_data)
+    solver = orderedSolver(None, clauses, literals, numbered_clauses, curr_clause)
+    print('graphs generated: ', solver.graphs)
     try:
         if request.method == "POST":
             return jsonify({
