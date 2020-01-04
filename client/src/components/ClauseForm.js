@@ -1,17 +1,12 @@
 import React from "react";
 import { useForm, useField, splitFormProps } from "react-form";
-import { postClauses } from '../utils/restClient'
 
 // Regex expression for checking valid clauses w/ potential
 // whitespace at beginning or end. Check if it's valid with:
 // `validClause.test({ string clause })`
 let validClause = /^ *(?:not )?x\d+(?: or (?:not )?x\d+)* *$/;
 
-async function sendToServer(values) {
-    console.log('input is ',values);
-    const response = await postClauses(values);
-    console.log('response is ', response);
-}
+
   
 async function fakeCheckValidClause(name, instance) {
     if (!name) {
@@ -40,7 +35,7 @@ const InputField = React.forwardRef((props, ref) => {
     // Build the field
     return (
         <>
-        <input {...getInputProps({ ref, ...rest })} />{" "}
+        <input placeholder={'x1 or not x2'} {...getInputProps({ ref, ...rest })} />{" "}
         {isValidating ? (
             <em>Validating...</em>
         ) : isTouched && error ? (
@@ -59,7 +54,7 @@ export function ClauseForm(props) {
         onSubmit: async (values, instance) => {
             // onSubmit (and everything else in React Form)
             // has async support out-of-the-box
-            await sendToServer(values);
+            await props.onSubmit(values);
             console.log("Huzzah!");
         },
         // debugForm: true
@@ -92,8 +87,6 @@ export function ClauseForm(props) {
                     <em>{isSubmitting ? "Submitting..." : null}</em>
                 </div>
             </Form>
-            <button className="prev-button" onClick={props.onPrevClick}>Prev Step</button>
-            <button className="next-button" onClick={props.onNextClick}>Next Step</button>
         </div>    
     );
 }

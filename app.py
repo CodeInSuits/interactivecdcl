@@ -77,7 +77,7 @@ def ping_pong():
 def dot_str():
     return jsonify({
         'status': 'success',
-        'data': 'digraph  {a -> b}'
+        'data': 'digraph  {2 [label = "x2=F @ 0"]; 1 [label = "x1=T @ 0"]; }'
     })
 
 # test to get form data from server
