@@ -12,20 +12,34 @@ class App extends Component {
     super(props);
     this.state = {
       currentStep: 0,
-      inputs: []
+      inputs: [],
+      inputIndex: 2
     };
   }
 
-  async sendToServer(values) {
-    console.log('input is ',values);
-    const response = await postClauses(values);
-    return response;
+  parseForm(values) {
+    let parsedValues = {};
+    parsedValues['clause1'] = values['clause1'];
+    let clauseIndex = 2;
+
+    for (let i = 0; i < this.state.inputs.length; i++)
+    {
+      let input = this.state.inputs[i];
+
+      if (values[input])
+      {
+        parsedValues[`clause${clauseIndex++}`] = values[input];
+      }
+    }
+
+    return parsedValues;
   }
 
   nextStep() {
     this.setState({
       currentStep: this.state.currentStep+1,
       inputs: [],
+      inputIndex: 2
     });
   }
 
@@ -34,12 +48,24 @@ class App extends Component {
   }
 
   appendInput() {
-    var newInput = `clause${this.state.inputs.length+2}`;
-    this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]) }));
+    var newInput = `clause${this.state.inputIndex}`;
+    this.setState(prevState => ({ 
+      inputs: prevState.inputs.concat([newInput]),
+      inputIndex: prevState.inputIndex+1
+    }));
+  }
+
+  deleteInput(toDelete) {
+    const inputsToUpdate = [...this.state.inputs];
+    const indexToDelete = inputsToUpdate.indexOf(toDelete);
+    if (indexToDelete > -1) {
+      inputsToUpdate.splice(indexToDelete, 1);
+    }
+    this.setState({inputs: inputsToUpdate});
   }
 
   async onSubmit(values) {
-    const response = await this.sendToServer(values);
+    const response = await postClauses(this.parseForm(values));
     if(response) {
       this.nextStep();
     }
@@ -47,10 +73,6 @@ class App extends Component {
       alert("Server failed to give a response. Please try different clauses");
     }
   }
-
-  // removeInput(inputToRemove) {
-  //   this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]) }));
-  // }
 
   render() {
     return (
@@ -61,10 +83,15 @@ class App extends Component {
             onNextClick={() => this.nextStep()} 
             inputs={this.state.inputs}
             onAddInput={() => this.appendInput()}
+            onDeleteInput={toDelete => this.deleteInput(toDelete)}
             onSubmit={values => this.onSubmit(values)}
           /> 
         }
-        { this.state.currentStep === 1 && <ClauseVisualizer onEditClauseClick={() => this.resetStep()}/> }
+        { this.state.currentStep === 1 && 
+          <ClauseVisualizer 
+            onEditClauseClick={() => this.resetStep()}
+          /> 
+        }
       </div>
     );
   }

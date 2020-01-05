@@ -1,4 +1,5 @@
 import React from "react";
+import '../css/ClauseForm.css';
 import { useForm, useField, splitFormProps } from "react-form";
 
 // Regex expression for checking valid clauses w/ potential
@@ -8,20 +9,19 @@ let validClause = /^ *(?:not )?x\d+(?: or (?:not )?x\d+)* *$/;
 
 
   
-async function fakeCheckValidClause(name, instance) {
-    if (!name) {
+async function fakeCheckValidClause(value, instance) {
+    if (!value) {
         return "A clause is required";
     }
 
     return instance.debounce(async () => {
-        console.log("checking clause");
         await new Promise(resolve => setTimeout(resolve, 1000));
         // All names are valid, so return a false error
         return false;
     }, 500);
 }
   
-const InputField = React.forwardRef((props, ref) => {
+function InputField(props) {
     // Let's use splitFormProps to get form-specific props
     const [field, fieldOptions, rest] = splitFormProps(props);
 
@@ -35,7 +35,7 @@ const InputField = React.forwardRef((props, ref) => {
     // Build the field
     return (
         <>
-        <input placeholder={'x1 or not x2'} {...getInputProps({ ref, ...rest })} />{" "}
+        <input {...getInputProps({...rest})} />{" "}
         {isValidating ? (
             <em>Validating...</em>
         ) : isTouched && error ? (
@@ -43,50 +43,58 @@ const InputField = React.forwardRef((props, ref) => {
         ) : null}
         </>
     );
-});
+}
 
 export function ClauseForm(props) {
     // Use the useForm hook to create a form instance
     const {
         Form,
+        values,
         meta: { isSubmitting, canSubmit }
     } = useForm({
         onSubmit: async (values, instance) => {
             // onSubmit (and everything else in React Form)
             // has async support out-of-the-box
-            await props.onSubmit(values);
-            console.log("Huzzah!");
+            props.onSubmit(values);
         },
         // debugForm: true
     });
+
+    const inputPlaceHolder = 'e.g. x1 or not x2 or x5'
 
     // TODO: start with 1 clause and make button to add clauses
     // TODO: define field="{}[0-9]+" as constant since it's also used in app.py
 
     return (
-        <div>
-            <Form>
+        <div className="graph-input-container">
+            <Form className="form-clauses-container">
                 <div>
                     <label>
-                    Clause1: <InputField field="clause1" validate={fakeCheckValidClause} />
+                        Clause 1: <InputField placeholder={inputPlaceHolder} field="clause1" validate={fakeCheckValidClause} />
                     </label>
-                    <div id="dynamicInput">
-                       {props.inputs.map(input => <label><InputField field={input} key={input} validate={fakeCheckValidClause} /></label>)}
+                    <div className="dynamic-inputs">
+                       {props.inputs.map((input, index) => 
+                            <label key={input}>
+                                Clause {index+2}: <InputField placeholder={inputPlaceHolder} field={input} key={input} validate={fakeCheckValidClause} />
+                                <button type="button" onClick={() => props.onDeleteInput(input)}>x</button>
+                            </label>
+                        )}
                    </div>
                 </div>
-                <div>
-                    <button onClick={props.onAddInput}>
+                <div className="add-input">
+                    <button type="button" className="add-button" onClick={props.onAddInput}>
                         +
                     </button>
-                    <button type="submit" disabled={!canSubmit}>
+                </div>
+                <div className="submit-form">
+                    <button className="submit-button" type="submit" disabled={!canSubmit}>
                         Submit
                     </button>
-                </div>
-
-                <div>
-                    <em>{isSubmitting ? "Submitting..." : null}</em>
+                    <div>
+                        <em>{isSubmitting ? "Submitting..." : null}</em>
+                    </div>
                 </div>
             </Form>
-        </div>    
+        </div> 
     );
 }

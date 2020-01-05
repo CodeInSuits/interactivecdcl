@@ -1,0 +1,51 @@
+.graph-input-container {
+    position: relative;
+    width: 80vw;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+em {
+    color: red;
+}
+
+.dynamic-inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.submit-button {
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    color: #000;
+    font-weight: bold;
+}
+
+.submit-button:disabled {
+    background: #ccc;
+    color: white;
+}
+
+.add-button {
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #44CCFF;
+}
+
+.submit-form {
+    display: flex;
+    justify-content: center;
+}
