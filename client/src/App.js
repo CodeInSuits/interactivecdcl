@@ -13,7 +13,8 @@ class App extends Component {
     this.state = {
       currentStep: 0,
       inputs: [],
-      inputIndex: 2
+      inputIndex: 2,
+      serverResponse: null,
     };
   }
 
@@ -35,16 +36,20 @@ class App extends Component {
     return parsedValues;
   }
 
-  nextStep() {
+  visualizeClauses(serverResponse) {
     this.setState({
       currentStep: this.state.currentStep+1,
-      inputs: [],
-      inputIndex: 2
+      serverResponse
     });
   }
 
-  resetStep() {
-    this.setState({currentStep: 0});
+  resetClauses() {
+    this.setState({
+      currentStep: 0,
+      inputs: [],
+      inputIndex: 2,
+      serverResponse: null
+    });
   }
 
   appendInput() {
@@ -67,7 +72,8 @@ class App extends Component {
   async onSubmit(values) {
     const response = await postClauses(this.parseForm(values));
     if(response) {
-      this.nextStep();
+      console.log(response)
+      this.visualizeClauses(response);
     }
     else{
       alert("Server failed to give a response. Please try different clauses");
@@ -80,16 +86,16 @@ class App extends Component {
         {/* { this.state.currentStep === 0 && <ClauseNum onNextClick={() => this.nextStep()}/> } */}
         { this.state.currentStep === 0 && 
           <ClauseForm 
-            onNextClick={() => this.nextStep()} 
             inputs={this.state.inputs}
             onAddInput={() => this.appendInput()}
             onDeleteInput={toDelete => this.deleteInput(toDelete)}
             onSubmit={values => this.onSubmit(values)}
           /> 
         }
-        { this.state.currentStep === 1 && 
+        { this.state.currentStep === 1 && !!this.state.serverResponse &&
           <ClauseVisualizer 
-            onEditClauseClick={() => this.resetStep()}
+            clauseInfo={this.state.serverResponse}
+            onResetClauseClick={() => this.resetClause()}
           /> 
         }
       </div>

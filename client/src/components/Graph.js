@@ -12,9 +12,11 @@ class Graph extends Component {
     console.log('In Graph component DOT source =', this.props.dotStr);
     d3.select(".graph").graphviz().renderDot(this.props.dotStr);
   }
-
+  componentDidMount() {
+    this.setGraph();
+  }
   componentDidUpdate() {
-      this.setGraph();
+    this.setGraph();
   }
 
   render() {

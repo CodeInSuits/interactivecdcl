@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { getDotStr } from '../utils/restClient';
 import Graph from './Graph';
-import { Button, Grid, Row, Col } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import '../css/ClauseVisualizer.css';
 
 
 class ClauseVisualizer extends Component {
@@ -9,48 +9,56 @@ class ClauseVisualizer extends Component {
   constructor(props){
     super(props);
     this.state = {
-      dotStr: '',
+      clauseStrs: props.clauseInfo.data.clauses,
+      graphStrs: props.clauseInfo.data.graphs,
+      graphIndex: 0
     };
   }
-  
-  async setGraph() {
-    const dotStr = await getDotStr();
-    console.log('DOT source =', dotStr);
-    this.setState({dotStr})
-    console.log(this.state.dotStr)
+
+  prevDotStr() {
+    this.setState(prevState => ({ 
+      graphIndex: prevState.graphIndex - 1
+    }));
+  }
+
+  nextDotStr() {
+    this.setState(prevState => ({ 
+      graphIndex: prevState.graphIndex + 1
+    }));
   }
 
   render() {
       return (
-        <Grid className="App">
-            <Row>
-            <Col sm={3}>
-                <Button bsStyle="primary" onClick={this.props.onEditClauseClick}>
-                Edit clause
-                </Button>
-            </Col>
-            <Col sm={9}>
-                <Graph
-                dotStr={this.state.dotStr}
-                />
-                { this.state.dotStr && <div className="graph-steps-container">
-                <div>
-                    <Button bsStyle="primary">
-                    Prev step
+        <div className="clause-visualizer">
+          <div className="edit-clauses-wrapper">
+            <div className="edit-clauses-container">
+              <Button bsStyle="primary" onClick={this.props.onResetClauseClick}>
+                Reset clause
+              </Button>
+            </div>
+          </div>
+          <div className="graph-wrapper">
+            <div className="graph-container">
+              <Graph
+                dotStr={this.state.graphStrs[this.state.graphIndex]}
+              />
+              <div className="graph-steps-container">
+                <div className="button-container">
+                  <div>
+                    <Button bsStyle="primary" onClick={() => this.prevDotStr()} disabled={this.state.graphIndex===0}>
+                      Prev step
                     </Button>
-                </div>
-                <div>
-                    <Button bsStyle="primary">
-                    Step
+                  </div>
+                  <div>
+                    <Button bsStyle="primary" onClick={() => this.nextDotStr()} disabled={this.state.graphIndex===(this.state.graphStrs.length-1)}>
+                      Next step
                     </Button>
+                  </div>
                 </div>
-                </div> }
-            </Col>
-            </Row>
-            <Button className="square" onClick={() => this.setGraph()}>
-            {'Click me'}
-            </Button>
-        </Grid>
+              </div> 
+            </div>
+          </div>
+        </div>
       );
   }
 }

@@ -88,12 +88,15 @@ def get_clauses():
     clauses, literals, numbered_clauses, curr_clause = parse_form(req_data)
     solver = orderedSolver(None, clauses, literals, numbered_clauses, curr_clause)
     solver.run()
-    print('graphs generated: ', solver.graphs)
+    graphs = solver.graphs
+    fakeGraphs = ['digraph  {2 [label = "x2=F @ 0"]; 1 [label = "x1=T @ 0"]; }', 'digraph {a -> b}', 'digraph {c -> d}', 'digraph {e -> f}']
+    print('graphs generated: ', graphs)
     try:
         if request.method == "POST":
             return jsonify({
-            'status': 'success',
-            'data': req_data
+                'status': 'success',
+                'clauses': req_data,
+                'graphs': fakeGraphs
             })
 
     except Exception as e:

@@ -5,19 +5,23 @@ import { useForm, useField, splitFormProps } from "react-form";
 // Regex expression for checking valid clauses w/ potential
 // whitespace at beginning or end. Check if it's valid with:
 // `validClause.test({ string clause })`
-let validClause = /^ *(?:not )?x\d+(?: or (?:not )?x\d+)* *$/;
+const validClause = /^ *(?:not )?x\d+(?: or (?:not )?x\d+)* *$/;
 
 
   
 async function fakeCheckValidClause(value, instance) {
-    if (!value) {
+    if(!value) {
         return "A clause is required";
     }
 
-    return instance.debounce(async () => {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // All names are valid, so return a false error
-        return false;
+    return instance.debounce(() => {
+        if(validClause.test(value)) {
+            // All names are valid, so return a false error
+            return false;
+        }
+        else {
+            return "Make sure to use all lower case letters, all your variables begin with x, and since it's CNF form, you can only use 'not' and 'or' in your clauses";
+        }   
     }, 500);
 }
   
@@ -49,7 +53,6 @@ export function ClauseForm(props) {
     // Use the useForm hook to create a form instance
     const {
         Form,
-        values,
         meta: { isSubmitting, canSubmit }
     } = useForm({
         onSubmit: async (values, instance) => {
@@ -75,7 +78,8 @@ export function ClauseForm(props) {
                     <div className="dynamic-inputs">
                        {props.inputs.map((input, index) => 
                             <label key={input}>
-                                Clause {index+2}: <InputField placeholder={inputPlaceHolder} field={input} key={input} validate={fakeCheckValidClause} />
+                                Clause {index+2}:&nbsp;
+                                <InputField placeholder={inputPlaceHolder} field={input} key={input} validate={fakeCheckValidClause} />
                                 <button type="button" onClick={() => props.onDeleteInput(input)}>x</button>
                             </label>
                         )}
