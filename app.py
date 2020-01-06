@@ -87,7 +87,8 @@ def get_clauses():
     print('req_data: ', req_data)
     clauses, literals, numbered_clauses, curr_clause = parse_form(req_data)
     solver = orderedSolver(None, clauses, literals, numbered_clauses, curr_clause)
-    solver.run()
+    isSat, _, _ = solver.run()
+    print('input is ', 'SAT' if isSat else 'UNSAT')
     graphs = solver.graphs
     fakeGraphs = ['digraph  {2 [label = "x2=F @ 0"]; 1 [label = "x1=T @ 0"]; }', 'digraph {a -> b}', 'digraph {c -> d}', 'digraph {e -> f}']
     print('graphs generated: ', graphs)
