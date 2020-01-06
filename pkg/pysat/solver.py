@@ -13,6 +13,7 @@ DOT_NODE_FMT = '{} [label = "x{}={} @ {}"]'
 DOT_CONFLICT_NODE = 'K'
 DOT_CONFLICT_FMT = '{} [label = "conflict (x{}) @ {}"]'
 DOT_EDGE_FMT = '{} -> {} [label = "c{}"]'
+DOT_DIGRAPH = 'digraph {{ {} }}'
 
 def make_node(node, decision_level, value):
     node_val = 'T' if value == TRUE else 'F'
@@ -134,7 +135,7 @@ class Solver:
         graph.append('')
         graph = DOT_DELIMITER.join(graph)
         logger.fine('graph constructed from curr_lvl_graph: %s', graph)
-        self.graphs.append(graph)
+        self.graphs.append(DOT_DIGRAPH.format(graph))
 
     def preprocess(self):
         """ Injects before solving """
