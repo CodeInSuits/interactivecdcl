@@ -32,6 +32,14 @@ class ClauseVisualizer extends Component {
         <div className="clause-visualizer">
           <div className="edit-clauses-wrapper">
             <div className="edit-clauses-container">
+              <div className="clause-strs">
+                {Object.entries(this.state.clauseStrs).map(([key, value]) => 
+                  <div key={key}>
+                    <label>{key}</label>&nbsp;&nbsp;&nbsp;
+                    <label>{value}</label>
+                  </div>
+                )}
+              </div>
               <Button bsStyle="primary" onClick={this.props.onResetClauseClick}>
                 Reset clause
               </Button>

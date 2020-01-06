@@ -95,7 +95,7 @@ class App extends Component {
         { this.state.currentStep === 1 && !!this.state.serverResponse &&
           <ClauseVisualizer 
             clauseInfo={this.state.serverResponse}
-            onResetClauseClick={() => this.resetClause()}
+            onResetClauseClick={() => this.resetClauses()}
           /> 
         }
       </div>
