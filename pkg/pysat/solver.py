@@ -50,8 +50,7 @@ class Solver:
 
         # The following are used for constructing DOT graphs
         self.graphs = []
-        self.curr_graph = []
-        self.curr_added_nodes = set()
+        self.curr_lvl_graph = dict()
         # self.numbered_clauses
         # self.curr_clause
 
@@ -92,7 +91,7 @@ class Solver:
             if conf_cls is not None:
                 # there is conflict in unit propagation
                 logger.fine('implication nodes: \n%s', self.nodes)
-                self.graphs.append(self.make_conflict_graph())
+                self.record_graph_state()
                 logger.fine('self.graphs: %s', self.graphs)
                 lvl, learnt = self.conflict_analyze(conf_cls)
                 logger.info('level reset to %s', lvl)
@@ -122,19 +121,20 @@ class Solver:
 
             logger.debug('propagate variables: %s', self.propagate_history)
             logger.debug('learnts: \n%s', self.learnts)
-        self.graphs.append(self.make_conflict_graph())
+        self.record_graph_state()
         logger.fine('self.graphs: %s', self.graphs)
         return True
 
-    def make_conflict_graph(self):
-        for node in self.nodes.values():
-            if node.value != UNASSIGN and node.variable not in self.curr_added_nodes:
-                self.curr_graph.append(make_node(node.variable, node.level, node.value))
-        self.curr_graph.append('')
-        graph = DOT_DELIMITER.join(self.curr_graph)
-        self.curr_graph = []
-        self.curr_added_nodes = set()
-        return graph
+    def record_graph_state(self):
+        graph = deque()
+        for i in range(self.level + 1):
+            # Conditional to account for when level 0 is/isn't present
+            if i in self.curr_lvl_graph:
+                graph.extend(self.curr_lvl_graph[i])
+        graph.append('')
+        graph = DOT_DELIMITER.join(graph)
+        logger.fine('graph constructed from curr_lvl_graph: %s', graph)
+        self.graphs.append(graph)
 
     def preprocess(self):
         """ Injects before solving """
@@ -245,14 +245,17 @@ class Solver:
 
     def update_graph(self, var, clause=None):
         node = self.nodes[var]
+        # Initialize and keep track of current graph level
+        if self.level not in self.curr_lvl_graph:
+            self.curr_lvl_graph[self.level] = deque()
         # Check if node has been assigned previously
         isConflict = False
         if node.value != UNASSIGN:
             isConflict = True
         else:
             # Make new dot node for this
-            self.curr_graph.append(make_node(node.variable, self.level, self.assigns[var]))
-            self.curr_added_nodes.add(node.variable)
+            str_node = make_node(node.variable, self.level, self.assigns[var])
+            self.curr_lvl_graph[self.level].append(str_node)
         node.value = self.assigns[var]
         node.level = self.level
 
@@ -261,14 +264,17 @@ class Solver:
             clause_num = self.numbered_clauses[clause]
             if isConflict:
                 # Make conflict node and add edge for conflicting values
-                self.curr_graph.append(make_conflict_node(node.variable, self.level))
-                self.curr_graph.append(make_edge(node.variable, DOT_CONFLICT_NODE, clause_num))
+                conf_node = make_conflict_node(node.variable, self.level)
+                conf_edge = make_edge(node.variable, DOT_CONFLICT_NODE, clause_num)
+                self.curr_lvl_graph[self.level].append(conf_node)
+                self.curr_lvl_graph[self.level].append(conf_edge)
             for v in [abs(lit) for lit in clause if abs(lit) != var]:
                 node.parents.append(self.nodes[v])
                 self.nodes[v].children.append(node)
                 parent = self.nodes[v]
                 thisNode = DOT_CONFLICT_NODE if isConflict else node.variable
-                self.curr_graph.append(make_edge(parent.variable, thisNode, clause_num))
+                impl_edge = make_edge(parent.variable, thisNode, clause_num)
+                self.curr_lvl_graph[self.level].append(impl_edge)
             node.clause = clause
             logger.fine('node %s has parents: %s', var, node.parents)
 
@@ -428,6 +434,7 @@ class Solver:
                 continue
             del self.branching_history[k]
             del self.propagate_history[k]
+            del self.curr_lvl_graph[k]
 
         logger.finer('after backtracking, graph:\n%s', self.nodes)
 
