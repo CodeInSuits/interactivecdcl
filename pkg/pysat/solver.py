@@ -50,8 +50,9 @@ class Solver:
         self.branching_count = 0
 
         # The following are used for constructing DOT graphs
-        self.graphs = []
+        self.graphs = deque()
         self.curr_lvl_graph = dict()
+        self.continue_idx = deque()
         # self.numbered_clauses
         # self.curr_clause
 
@@ -92,8 +93,7 @@ class Solver:
             if conf_cls is not None:
                 # there is conflict in unit propagation
                 logger.fine('implication nodes: \n%s', self.nodes)
-                self.record_graph_state()
-                logger.fine('self.graphs: %s', self.graphs)
+                self.continue_idx.append(len(self.graphs) - 1)
                 lvl, learnt = self.conflict_analyze(conf_cls)
                 logger.info('level reset to %s', lvl)
                 logger.debug('learnt: %s', learnt)
@@ -103,6 +103,7 @@ class Solver:
                 self.numbered_clauses[learnt] = self.curr_clause
                 self.curr_clause += 1
                 self.backtrack(lvl)
+                self.record_graph_state()
                 self.level = lvl
             elif self.are_all_variables_assigned():
                 break
@@ -122,8 +123,12 @@ class Solver:
 
             logger.debug('propagate variables: %s', self.propagate_history)
             logger.debug('learnts: \n%s', self.learnts)
-        self.record_graph_state()
-        logger.fine('self.graphs: %s', self.graphs)
+        self.continue_idx.append(len(self.graphs) - 1)
+        logger.fine('self.graphs:\n')
+        for i in range(len(self.graphs)):
+            logger.fine('[%d]: %s', i, self.graphs[i])
+        logger.fine('===\n')
+        logger.fine('indices of continue: %s', self.continue_idx)
         return True
 
     def record_graph_state(self):
@@ -134,7 +139,7 @@ class Solver:
                 graph.extend(self.curr_lvl_graph[i])
         graph.append('')
         graph = DOT_DELIMITER.join(graph)
-        logger.fine('graph constructed from curr_lvl_graph: %s', graph)
+        logger.debug('graph constructed from curr_lvl_graph: %s', graph)
         self.graphs.append(DOT_DIGRAPH.format(graph))
 
     def preprocess(self):
@@ -278,6 +283,7 @@ class Solver:
                 self.curr_lvl_graph[self.level].append(impl_edge)
             node.clause = clause
             logger.fine('node %s has parents: %s', var, node.parents)
+        self.record_graph_state()
 
     def unit_propagate(self):
         """
