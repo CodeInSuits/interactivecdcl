@@ -89,19 +89,25 @@ def get_clauses():
     solver = orderedSolver(None, clauses, literals, numbered_clauses, curr_clause)
     isSat, _, _ = solver.run()
     print('input is ', 'SAT' if isSat else 'UNSAT')
-    graphs = solver.graphs
-    fakeGraphs = ['digraph  {2 [label = "x2=F @ 0"]; 1 [label = "x1=T @ 0"]; }', 'digraph {a -> b}', 'digraph {c -> d}', 'digraph {e -> f}']
-    print('graphs generated: ', graphs)
+    step_graphs = list(solver.graphs)
+    cont_indices = list(solver.continue_idx)
+    #fakeGraphs = ['digraph  {2 [label = "x2=F @ 0"]; 1 [label = "x1=T @ 0"]; }', 'digraph {a -> b}', 'digraph {c -> d}', 'digraph {e -> f}']
+    print('graphs generated: ', step_graphs)
+    print('continue indices: ', cont_indices)
     try:
         if request.method == "POST":
             return jsonify({
                 'status': 'success',
                 'clauses': req_data,
-                'graphs': fakeGraphs
+                'stepGraphs': step_graphs,
+                'contIndices': cont_indices
             })
-
     except Exception as e:
-        return e
+        print(e)
+        return jsonify({
+            'status': 'fail',
+            'error': str(e)
+        })
 
 if __name__ == '__main__':
     app.run()

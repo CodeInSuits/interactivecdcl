@@ -71,12 +71,12 @@ class App extends Component {
 
   async onSubmit(values) {
     const response = await postClauses(this.parseForm(values));
-    if(response) {
+    if(response.data.status==='success') {
       console.log(response)
       this.visualizeClauses(response);
     }
     else{
-      alert("Server failed to give a response. Please try different clauses");
+      alert("Server failed to give a response with an error message: " + response.data.error + ". Please try different clauses!");
     }
   }
 

@@ -10,7 +10,8 @@ class ClauseVisualizer extends Component {
     super(props);
     this.state = {
       clauseStrs: props.clauseInfo.data.clauses,
-      graphStrs: props.clauseInfo.data.graphs,
+      graphStrs: props.clauseInfo.data.stepGraphs,
+      contIndices: props.clauseInfo.data.contIndices,
       graphIndex: 0
     };
   }
@@ -47,23 +48,22 @@ class ClauseVisualizer extends Component {
           </div>
           <div className="graph-wrapper">
             <div className="graph-container">
-              <Graph
+              <Graph 
+                className="graph"
                 dotStr={this.state.graphStrs[this.state.graphIndex]}
               />
-              <div className="graph-steps-container">
-                <div className="button-container">
-                  <div>
-                    <Button bsStyle="primary" onClick={() => this.prevDotStr()} disabled={this.state.graphIndex===0}>
-                      Prev step
-                    </Button>
-                  </div>
-                  <div>
-                    <Button bsStyle="primary" onClick={() => this.nextDotStr()} disabled={this.state.graphIndex===(this.state.graphStrs.length-1)}>
-                      Next step
-                    </Button>
-                  </div>
+              <div className="button-container">
+                <div>
+                  <Button bsStyle="primary" onClick={() => this.prevDotStr()} disabled={this.state.graphIndex===0}>
+                    Prev step
+                  </Button>
                 </div>
-              </div> 
+                <div>
+                  <Button bsStyle="primary" onClick={() => this.nextDotStr()} disabled={this.state.graphIndex===(this.state.graphStrs.length-1)}>
+                    Next step
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

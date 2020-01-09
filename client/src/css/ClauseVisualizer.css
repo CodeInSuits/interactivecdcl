@@ -26,9 +26,14 @@
 .clause-visualizer .graph-wrapper {
     width: 100%;
     padding: 20px 20px 20px 300px;
+    height: 100%;
 }
 
 .clause-visualizer .graph-wrapper .graph-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 1rem;
@@ -36,8 +41,21 @@
 }
 
 .graph-container .button-container {
+    position: absolute;
+    height: 20%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
+}
+
+.graph-container .graph {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
 }
 
 @media (max-width: 900px) {
