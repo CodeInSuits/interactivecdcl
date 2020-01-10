@@ -100,7 +100,8 @@ def get_clauses():
                 'status': 'success',
                 'clauses': req_data,
                 'stepGraphs': step_graphs,
-                'contIndices': cont_indices
+                'contIndices': cont_indices,
+                'isSat': isSat
             })
     except Exception as e:
         print(e)

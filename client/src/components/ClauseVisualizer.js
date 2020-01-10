@@ -16,31 +16,51 @@ class ClauseVisualizer extends Component {
     };
   }
 
-  prevDotStr() {
+  prevStep() {
     this.setState(prevState => ({ 
       graphIndex: prevState.graphIndex - 1
     }));
   }
 
-  nextDotStr() {
+  nextStep() {
     this.setState(prevState => ({ 
       graphIndex: prevState.graphIndex + 1
     }));
   }
 
+  prevContinue() {
+    for (let i = this.state.contIndices.length-1; i >= 0; i--) {
+      if (this.state.contIndices[i]<this.state.graphIndex) {
+        console.log("prev continue to step " + this.state.contIndices[i]);
+        this.setState({graphIndex: this.state.contIndices[i]});
+        return;
+      }
+    }
+  }
+
+  nextContinue() {
+    for (let i = 0; i < this.state.contIndices.length; i++) {
+      if (this.state.contIndices[i]>this.state.graphIndex) {
+        console.log("next continue to step " + this.state.contIndices[i]);
+        this.setState({graphIndex: this.state.contIndices[i]});
+        return;
+      }
+    }
+  }
+
   render() {
       return (
         <div className="clause-visualizer">
-          <div className="edit-clauses-wrapper">
-            <div className="edit-clauses-container">
-              <div className="clause-strs">
-                {Object.entries(this.state.clauseStrs).map(([key, value]) => 
-                  <div key={key}>
-                    <label>{key}</label>&nbsp;&nbsp;&nbsp;
-                    <label>{value}</label>
-                  </div>
-                )}
-              </div>
+          <div className="clause-strs-wrapper">
+            <div className="clause-strs-container">
+              {Object.entries(this.state.clauseStrs).map(([key, value]) => 
+                <div key={key}>
+                  <label>{key}</label>&nbsp;&nbsp;&nbsp;
+                  <label>{value}</label>
+                </div>
+              )}
+            </div>
+            <div className="clause-strs-button-container">
               <Button bsStyle="primary" onClick={this.props.onResetClauseClick}>
                 Reset clause
               </Button>
@@ -52,15 +72,25 @@ class ClauseVisualizer extends Component {
                 className="graph"
                 dotStr={this.state.graphStrs[this.state.graphIndex]}
               />
-              <div className="button-container">
+              <div className="graph-button-container">    
                 <div>
-                  <Button bsStyle="primary" onClick={() => this.prevDotStr()} disabled={this.state.graphIndex===0}>
+                  <Button bsStyle="primary" onClick={() => this.prevContinue()} disabled={this.state.graphIndex<=this.state.contIndices[0]}>
+                    Prev Continue
+                  </Button>
+                </div>
+                <div>
+                  <Button bsStyle="primary" onClick={() => this.prevStep()} disabled={this.state.graphIndex===0}>
                     Prev step
                   </Button>
                 </div>
                 <div>
-                  <Button bsStyle="primary" onClick={() => this.nextDotStr()} disabled={this.state.graphIndex===(this.state.graphStrs.length-1)}>
+                  <Button bsStyle="primary" onClick={() => this.nextStep()} disabled={this.state.graphIndex===(this.state.graphStrs.length-1)}>
                     Next step
+                  </Button>
+                </div>
+                <div>
+                  <Button bsStyle="primary" onClick={() => this.nextContinue()} disabled={this.state.graphIndex>=this.state.contIndices[this.state.contIndices.length-1]}>
+                    Next Continue
                   </Button>
                 </div>
               </div>

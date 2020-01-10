@@ -3,7 +3,7 @@
     height: 100%;
 }
 
-.clause-visualizer .edit-clauses-wrapper {
+.clause-visualizer .clause-strs-wrapper {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,7 +13,7 @@
     height: 100%;
 }
 
-.clause-visualizer .edit-clauses-wrapper .edit-clauses-container {
+.clause-visualizer .clause-strs-wrapper .clause-strs-container {
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -40,7 +40,7 @@
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
-.graph-container .button-container {
+.graph-container .graph-button-container {
     position: absolute;
     height: 20%;
     bottom: 0;
@@ -59,7 +59,7 @@
 }
 
 @media (max-width: 900px) {
-    .clause-visualizer .edit-clauses-wrapper {
+    .clause-visualizer .clause-strs-wrapper {
         width: 230px;
     }
 
@@ -69,7 +69,7 @@
 }
 
 @media (max-width: 800px) {
-    .clause-visualizer .edit-clauses-wrapper {
+    .clause-visualizer .clause-strs-wrapper {
         width: 200px;
     }
 
