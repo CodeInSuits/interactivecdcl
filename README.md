@@ -1,7 +1,7 @@
 # CDCL interactive solver
-An react app served by flask, deployed easily on heroku. It is used to show the steps in SAT solver(CDCL algorithm).
+An react app used to show the steps in SAT solver(CDCL algorithm). This project is built for Princeton University course [COS516](https://www.cs.princeton.edu/courses/archive/fall19/cos516/index.html) taught by professor [Aarti Gupta](https://www.cs.princeton.edu/~aartig/).
 
-[Production ready example](https://interactivecdcl.herokuapp.com/)
+[Visit live site @ https://interactivecdcl.herokuapp.com](https://interactivecdcl.herokuapp.com/)
 
 ## Usage
 
@@ -65,6 +65,12 @@ git push heroku master
 
 2. [python3 virtualenv](https://stackoverflow.com/questions/23842713/using-python-3-in-virtualenv)
 
-3. [liranfar/flask-react-on-heroku - used to set up framework](https://github.com/liranfar/flask-react-on-heroku)
+## Acknowledgements
 
-4. [z11i/pysat - used to computer clauses and generate graph info](https://github.com/z11i/pysat)
+1. [liranfar/flask-react-on-heroku - used to set up framework](https://github.com/liranfar/flask-react-on-heroku)
+
+2. [z11i/pysat - used to computer clauses and generate graph info](https://github.com/z11i/pysat)
+
+## License
+
+Open sourced under the [MIT license](LICENSE.md).
