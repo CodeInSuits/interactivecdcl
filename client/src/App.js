@@ -12,27 +12,8 @@ class App extends Component {
     super(props);
     this.state = {
       currentStep: 0,
-      inputs: ['clause1'],
-      inputIndex: 2,
       serverResponse: null,
     };
-  }
-
-  parseForm(values) {
-    let parsedValues = {};
-    let clauseIndex = 1;
-
-    for (let i = 0; i < this.state.inputs.length; i++)
-    {
-      let input = this.state.inputs[i];
-
-      if (values[input])
-      {
-        parsedValues[`clause${clauseIndex++}`] = values[input];
-      }
-    }
-
-    return parsedValues;
   }
 
   visualizeClauses(serverResponse) {
@@ -51,33 +32,11 @@ class App extends Component {
     });
   }
 
-  appendInput() {
-    var newInput = `clause${this.state.inputIndex}`;
-    this.setState(prevState => ({ 
-      inputs: prevState.inputs.concat([newInput]),
-      inputIndex: prevState.inputIndex+1
-    }));
-  }
-
-  deleteInput(toDelete) {
-    const inputsToUpdate = [...this.state.inputs];
-    const indexToDelete = inputsToUpdate.indexOf(toDelete);
-    if (indexToDelete > -1) {
-      inputsToUpdate.splice(indexToDelete, 1);
-    }
-    this.setState({inputs: inputsToUpdate});
-  }
-
   handleUserInput (userInput) {
     console.log(userInput)
   }
 
   async onSubmit(values) {
-    console.log(values);
-    if(this.state.inputs.length===0) {
-      alert('Need at least one clause to proceed to next step!');
-      return;
-    }
     const response = await postClauses(values);
     // const response = await postClauses(this.parseForm(values));
     if(response.data.status==='success') {
@@ -94,12 +53,7 @@ class App extends Component {
       <div className="graph-input-wrapper">
         {/* { this.state.currentStep === 0 && <ClauseNum onNextClick={() => this.nextStep()}/> } */}
         { this.state.currentStep === 0 && 
-          <ClauseForm 
-            inputs={this.state.inputs}
-            handleUserInput={userInput => this.handleUserInput(userInput)}
-            addClause={() => this.appendInput()}
-            onAddInput={() => this.appendInput()}
-            onDeleteInput={toDelete => this.deleteInput(toDelete)}
+          <ClauseForm
             onSubmit={values => this.onSubmit(values)}
           /> 
         }

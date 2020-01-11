@@ -25,13 +25,19 @@ class ClauseForm extends Component {
     deleteClause (clause) {
         let updatedInputs = Object.assign({}, this.state.inputs);
         delete updatedInputs[clause];
-
+        updatedInputs = this.reorderClauses(updatedInputs);
+        
         this.setState(prevState => (
             {
                 inputs : updatedInputs,
                 clauseNum : prevState.clauseNum - 1
             }
         ));
+    }
+
+    reorderClauses(clauses) {
+        const reorderedClauses = Object.fromEntries(Object.values(clauses).map((clause, index) => [`clause${index+1}`, clause]));
+        return reorderedClauses;
     }
 
     render () {

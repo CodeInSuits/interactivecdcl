@@ -10,15 +10,15 @@ class TerminalWindow extends Component {
       \n
       To skip introduction, press Enter key.
       \n
-      To add a clause, type 'add [CLAUSE]'.
+      To add a clause, type 'add [CLAUSE]' (e.g. add x1 or not x2 or x5).
       \n
-      To remove a clause, type 'del [CLAUSE_LABEL]'.
+      To remove a clause, type 'del [CLAUSE_LABEL]' (e.g. del clause3). Note clauses will be reordered after deletion.
       \n
-      To list current clauses, type 'list'.
+      To list current clauses you have, type 'list'.
       \n
-      Once you're done, type 'run'.
+      Once you're done, type 'run' to compute current clauses and visualize the implication graph.
       \n
-      If you need additional help, type 'help'.`],
+      If you need help, type 'help'.`],
     }
     this.validateUserInput = this.validateUserInput.bind(this);
   }
@@ -53,25 +53,25 @@ class TerminalWindow extends Component {
           this.props.addClause(clause);
         }
         else {
-            this.setState(prevState => ({ prompts : [...prevState.prompts, "Make sure to use all lower case letters, all your variables begin with x, and since it's CNF form, you can only use 'not' and 'or' in your clauses!"] }));
+            this.setState(prevState => ({ prompts : [...prevState.prompts, "Make sure to use all lower case letters, all your variables begin with x, end with a positive integer and since it's CNF form, you can only use 'not' and 'or' in your clauses!"] }));
         }
       }
     }
 
-    // TO DO
     else if (command === 'del') {
       let toDelete = parsedValue[1];
       if (toDelete) {
         if (this.props.clauses[toDelete]) {
+          const clauseToDelete = this.props.clauses[toDelete];
           this.props.deleteClause(toDelete);
-          this.setState(prevState => ({ prompts : [...prevState.prompts, `${toDelete} deleted!`] }));
+          this.setState(prevState => ({ prompts : [...prevState.prompts, `Clause ${clauseToDelete} has been deleted! Your current clauses have been reordered.`] }));
         }
         else {
-          this.setState(prevState => ({ prompts : [...prevState.prompts, "You're trying to delete a clause that doesn't exist."] }));
+          this.setState(prevState => ({ prompts : [...prevState.prompts, "Invalid clause label. Use command 'list' to check available clause label you have."] }));
         }
       }
       else {
-        this.setState(prevState => ({ prompts : [...prevState.prompts, "Invalid delete clause command."] }));
+        this.setState(prevState => ({ prompts : [...prevState.prompts, "Invalid delete clause command. You need to specify a clause label(e.g. del clause3)."] }));
       }
     }
 
@@ -79,9 +79,19 @@ class TerminalWindow extends Component {
       this.setState(prevState => ({ prompts : [...prevState.prompts, JSON.stringify(this.props.clauses)] }));
     }
 
-    // TO DO
     else if (value.trim().toLowerCase() === 'help') {
-      this.setState(prevState => ({ prompts : [...prevState.prompts, "Help info goes here."] }));
+      const helpInfo = `To skip text animation, press Enter key.
+      \n
+      To add a clause, type 'add [CLAUSE]' (e.g. add x1 or not x2 or x5).
+      \n
+      To remove a clause, type 'del [CLAUSE_LABEL]' (e.g. del clause3). Note clauses will be reordered after deletion.
+      \n
+      To list current clauses you have, type 'list'.
+      \n
+      Once you're done, type 'run' to compute current clauses and visualize the implication graph.
+      \n
+      If you need help, type 'help'.`;
+      this.setState(prevState => ({ prompts : [...prevState.prompts, helpInfo] }));
     }
 
     else {
