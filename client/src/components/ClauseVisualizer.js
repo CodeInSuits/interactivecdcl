@@ -77,22 +77,22 @@ class ClauseVisualizer extends Component {
               <div className="graph-button-container">    
                 <div>
                   <Button bsStyle="primary" onClick={() => this.prevContinue()} disabled={this.state.graphIndex<=this.state.contIndices[0]}>
-                    Prev Continue
+                    {'<< Prev Continue'}
                   </Button>
                 </div>
                 <div>
                   <Button bsStyle="primary" onClick={() => this.prevStep()} disabled={this.state.graphIndex===0}>
-                    Prev step
+                    {'< Prev Step'}
                   </Button>
                 </div>
                 <div>
                   <Button bsStyle="primary" onClick={() => this.nextStep()} disabled={this.state.graphIndex===(this.state.graphStrs.length-1)}>
-                    Next step
+                    {'Next Step >'}
                   </Button>
                 </div>
                 <div>
                   <Button bsStyle="primary" onClick={() => this.nextContinue()} disabled={this.state.graphIndex>=this.state.contIndices[this.state.contIndices.length-1]}>
-                    Next Continue
+                    {'Next Continue >>'}
                   </Button>
                 </div>
               </div>

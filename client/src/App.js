@@ -45,7 +45,7 @@ class App extends Component {
   resetClauses() {
     this.setState({
       currentStep: 0,
-      inputs: [],
+      inputs: ['clause1'],
       inputIndex: 2,
       serverResponse: null
     });
