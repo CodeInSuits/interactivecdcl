@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3'
 import * as d3Graphviz from 'd3-graphviz';
 
-class Graph extends Component {
+class ClauseGraph extends Component {
 
   constructor(props){
     super(props);
@@ -40,4 +40,4 @@ class Graph extends Component {
   }
 }
 
-export default Graph;
+export default ClauseGraph;

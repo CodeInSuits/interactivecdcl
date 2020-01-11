@@ -1,0 +1,115 @@
+import React, { Component } from "react";
+import "../../css/terminal-window/TerminalWindow.css";
+import CommandLineText from './CommandLineText';
+
+class TerminalWindow extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      prompts : [`Welcome to Interactive CDCL!
+      \n
+      To skip introduction, press Enter key.
+      \n
+      To add a clause, type 'add [CLAUSE]'.
+      \n
+      To remove a clause, type 'del [CLAUSE_LABEL]'.
+      \n
+      To list current clauses, type 'list'.
+      \n
+      Once you're done, type 'run'.
+      \n
+      If you need additional help, type 'help'.`],
+    }
+    this.validateUserInput = this.validateUserInput.bind(this);
+  }
+
+  validateUserInput (value) {
+    const validClause = /^ *(?:not )?x\d+(?: or (?:not )?x\d+)* *$/;
+    const parsedValue = value.trim().split(/\s+/);
+    const command = parsedValue[0].toLowerCase();
+
+    if (value.trim().toLowerCase() === 'run') {
+      if (JSON.stringify(this.props.clauses) === '{}') {
+        this.setState(prevState => ({ prompts : [...prevState.prompts, "Can't build a graph with zero clauses."] }));
+      }
+      else {
+        this.props.submitClauses();
+      }
+    }
+
+    else if (command === 'add') {
+      const clauses = parsedValue.slice(1);
+      const clause = clauses.join(' ');
+
+      console.log(clause)
+
+
+      if (!clause || clause.replace(/\s/g, '').length === 0) {
+        this.setState(prevState => ({ prompts : [...prevState.prompts, "Clause input field cannot be empty!"] }));
+      }
+      else {
+        if (validClause.test(clause)) {
+          this.setState(prevState => ({ prompts : [...prevState.prompts, `Clause '${clause}' added!`] }));
+          this.props.addClause(clause);
+        }
+        else {
+            this.setState(prevState => ({ prompts : [...prevState.prompts, "Make sure to use all lower case letters, all your variables begin with x, and since it's CNF form, you can only use 'not' and 'or' in your clauses!"] }));
+        }
+      }
+    }
+
+    // TO DO
+    else if (command === 'del') {
+      let toDelete = parsedValue[1];
+      if (toDelete) {
+        if (this.props.clauses[toDelete]) {
+          this.props.deleteClause(toDelete);
+          this.setState(prevState => ({ prompts : [...prevState.prompts, `${toDelete} deleted!`] }));
+        }
+        else {
+          this.setState(prevState => ({ prompts : [...prevState.prompts, "You're trying to delete a clause that doesn't exist."] }));
+        }
+      }
+      else {
+        this.setState(prevState => ({ prompts : [...prevState.prompts, "Invalid delete clause command."] }));
+      }
+    }
+
+    else if (value.trim().toLowerCase() === 'list') {
+      this.setState(prevState => ({ prompts : [...prevState.prompts, JSON.stringify(this.props.clauses)] }));
+    }
+
+    // TO DO
+    else if (value.trim().toLowerCase() === 'help') {
+      this.setState(prevState => ({ prompts : [...prevState.prompts, "Help info goes here."] }));
+    }
+
+    else {
+      this.setState(prevState => ({ prompts : [...prevState.prompts, "Invalid command."] }));
+    }
+  }
+
+  render () {
+    return (
+      <div className="terminal-window-container">
+        <div className="terminal-window-header">
+            <div className="title">
+                Interactive CDCL
+            </div>
+        </div>
+        <div className="terminal-window">
+            {this.state.prompts.map((prompt, index) =>
+              <CommandLineText
+                key={`prompt-${index}`}
+                prompt={prompt}
+                blink={index === this.state.prompts.length - 1}
+                handleUserInput={this.validateUserInput}
+              />
+            )}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default TerminalWindow;

@@ -5,15 +5,14 @@
   "dependencies": {
     "axios": "^0.18.1",
     "bootstrap": "^3.4.1",
-    "d3": "^5.14.2",
+    "d3": "^5.15.0",
     "d3-graphviz": "^2.6.1",
     "google-maps-react": "^2.0.2",
     "nodemon": "^2.0.2",
     "react": "^16.12.0",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.12.0",
-    "react-form": "^4.0.1",
-    "react-full-page": "^0.1.4",
+    "react-full-page": "^0.1.7",
     "react-scripts": "^3.3.0",
     "react-scrollable-anchor": "^0.6.1"
   },

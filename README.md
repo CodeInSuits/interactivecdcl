@@ -3,7 +3,7 @@ An react app served by flask, deployed easily on heroku. It is used to show the 
 
 [Production ready example](https://interactivecdcl.herokuapp.com/)
 
-# Usage
+## Usage
 
 ### Local Development
 ```
@@ -20,13 +20,7 @@ $ source ./venv/bin/activate # to activate virtual environment
 $ pip install -r requirements.txt
 ```
 
-If you run into issues with `requirements.txt` and get the message `Error: pg_config executable not found`, do the following:
-
-1. Download Postgres.app from https://postgresapp.com/
-2. With your virtual environment activated, run `export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"`
-3. Continue with installing `requirements.txt`
-
-Make sure to activate the virtual environment for all the following steps. To deactivate, simply run `deactivate`.
+#### Make sure to activate the virtual environment for all the following steps. To deactivate, simply run `deactivate`.
 
 ### Server
 In the top level of interactivecdcl, run:
@@ -62,6 +56,8 @@ git remote set-url heroku https://git.heroku.com/interactivecdcl.git
 Add and commit your code that is ready for deployment
 git push heroku master
 ```
+
+#### Make sure to build client first before pushing to Heroku to reflect most current local changes
 
 ## Resources
 

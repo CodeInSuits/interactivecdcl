@@ -1,0 +1,39 @@
+.terminal-window-container {
+  width: 80vw;
+  max-width: 600px;
+  height: 400px;
+  max-height: 100vh;
+}
+
+.terminal-window-header {
+  width: 100%;
+  height: 24px;
+  border-radius: 1rem 1rem 0 0;
+  border: solid 1px rgb(166,166,166);
+  background: linear-gradient(0deg, rgb(166,166,166) 0%, rgb(242,242,242) 100%);
+}
+
+.terminal-window-header .title {
+  color: #000000;
+  font-size: 14px;
+  font-family: 'Dosis', sans-serif;
+  letter-spacing: 2px;
+  margin-left: 8px;
+  margin-top: 2px;
+}
+
+.terminal-window {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  background-color: #000000;
+  border: solid 1px rgb(166,166,166);
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  color: rgb(51, 255, 51);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

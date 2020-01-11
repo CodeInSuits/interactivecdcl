@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { ClauseForm } from './components/ClauseForm';
+import ClauseForm from './components/ClauseForm';
 // import ClauseNum from './components/ClauseNum';
 import ClauseVisualizer from './components/ClauseVisualizer';
 import { postClauses } from './utils/restClient';
@@ -68,12 +68,18 @@ class App extends Component {
     this.setState({inputs: inputsToUpdate});
   }
 
+  handleUserInput (userInput) {
+    console.log(userInput)
+  }
+
   async onSubmit(values) {
+    console.log(values);
     if(this.state.inputs.length===0) {
       alert('Need at least one clause to proceed to next step!');
       return;
     }
-    const response = await postClauses(this.parseForm(values));
+    const response = await postClauses(values);
+    // const response = await postClauses(this.parseForm(values));
     if(response.data.status==='success') {
       console.log(response)
       this.visualizeClauses(response);
@@ -90,6 +96,8 @@ class App extends Component {
         { this.state.currentStep === 0 && 
           <ClauseForm 
             inputs={this.state.inputs}
+            handleUserInput={userInput => this.handleUserInput(userInput)}
+            addClause={() => this.appendInput()}
             onAddInput={() => this.appendInput()}
             onDeleteInput={toDelete => this.deleteInput(toDelete)}
             onSubmit={values => this.onSubmit(values)}

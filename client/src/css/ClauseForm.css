@@ -10,10 +10,17 @@
     position: relative;
     width: 80vw;
     max-width: 600px;
+    height: 400px;
+    max-height: 100vh;
     padding: 20px;
-    background-color: #ffffff;
-    border-radius: 1rem;
+    /* background-color: #ffffff; */
+    background-color: #000000;
+    border: solid 1px rgb(166,166,166);
+    border-radius: 0 0 1rem 1rem;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    color: rgb(51, 255, 51);
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 1px;
 }
 
 em {
@@ -31,8 +38,8 @@ em {
     justify-content: center;
     align-items: center;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-    color: #000;
-    font-weight: bold;
+    /* color: #000;
+    font-weight: bold; */
 }
 
 .submit-button:disabled {
