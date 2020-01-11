@@ -53,17 +53,19 @@ class ClauseVisualizer extends Component {
         <div className="clause-visualizer">
           <div className="clause-strs-wrapper">
             <div className="clause-strs-container">
-              {Object.entries(this.state.clauseStrs).map(([key, value]) => 
-                <div key={key}>
-                  <label>{key}</label>&nbsp;&nbsp;&nbsp;
-                  <label>{value}</label>
-                </div>
-              )}
-            </div>
-            <div className="clause-strs-button-container">
-              <Button bsStyle="primary" onClick={this.props.onResetClauseClick}>
-                Reset clause
-              </Button>
+              <div className="clause-strs">
+                {Object.entries(this.state.clauseStrs).map(([key, value]) => 
+                  <div key={key}>
+                    <label>{key}</label>&nbsp;&nbsp;&nbsp;
+                    <label>{value}</label>
+                  </div>
+                )}
+              </div>
+              <div className="clause-strs-button-container">
+                <Button bsStyle="primary" onClick={this.props.onResetClauseClick}>
+                  Reset clause
+                </Button>
+              </div>
             </div>
           </div>
           <div className="graph-wrapper">

@@ -12,7 +12,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentStep: 0,
-      inputs: [],
+      inputs: ['clause1'],
       inputIndex: 2,
       serverResponse: null,
     };
@@ -20,8 +20,7 @@ class App extends Component {
 
   parseForm(values) {
     let parsedValues = {};
-    parsedValues['clause1'] = values['clause1'];
-    let clauseIndex = 2;
+    let clauseIndex = 1;
 
     for (let i = 0; i < this.state.inputs.length; i++)
     {
@@ -70,6 +69,10 @@ class App extends Component {
   }
 
   async onSubmit(values) {
+    if(this.state.inputs.length===0) {
+      alert('Need at least one clause to proceed to next step!');
+      return;
+    }
     const response = await postClauses(this.parseForm(values));
     if(response.data.status==='success') {
       console.log(response)

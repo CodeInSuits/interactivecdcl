@@ -14,6 +14,9 @@
 }
 
 .clause-visualizer .clause-strs-wrapper .clause-strs-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -21,6 +24,24 @@
     background-color: #ffffff;
     border-radius: 1rem;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.clause-strs-container .clause-strs {
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+}
+
+.clause-strs-container .clause-strs-button-container {
+    position: absolute;
+    height: 10%;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .clause-visualizer .graph-wrapper {
@@ -40,22 +61,23 @@
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
+.graph-container .graph {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+}
+
 .graph-container .graph-button-container {
     position: absolute;
-    height: 20%;
+    height: 10%;
     bottom: 0;
     right: 0;
     left: 0;
     padding: 20px;
     display: flex;
     justify-content: space-between;
-}
-
-.graph-container .graph {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    height: 80%;
 }
 
 @media (max-width: 900px) {

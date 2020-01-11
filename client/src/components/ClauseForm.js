@@ -11,7 +11,7 @@ const validClause = /^ *(?:not )?x\d+(?: or (?:not )?x\d+)* *$/;
   
 async function fakeCheckValidClause(value, instance) {
     if(!value) {
-        return "A clause is required";
+        return "Clause input field cannot be empty!";
     }
 
     return instance.debounce(() => {
@@ -20,7 +20,7 @@ async function fakeCheckValidClause(value, instance) {
             return false;
         }
         else {
-            return "Make sure to use all lower case letters, all your variables begin with x, and since it's CNF form, you can only use 'not' and 'or' in your clauses";
+            return "Make sure to use all lower case letters, all your variables begin with x, and since it's CNF form, you can only use 'not' and 'or' in your clauses!";
         }   
     }, 500);
 }
@@ -72,13 +72,10 @@ export function ClauseForm(props) {
         <div className="graph-input-container">
             <Form className="form-clauses-container">
                 <div>
-                    <label>
-                        Clause 1: <InputField placeholder={inputPlaceHolder} field="clause1" validate={fakeCheckValidClause} />
-                    </label>
                     <div className="dynamic-inputs">
                        {props.inputs.map((input, index) => 
                             <label key={input}>
-                                Clause {index+2}:&nbsp;
+                                Clause {index+1}:&nbsp;
                                 <InputField placeholder={inputPlaceHolder} field={input} key={input} validate={fakeCheckValidClause} />
                                 <button type="button" onClick={() => props.onDeleteInput(input)}>x</button>
                             </label>
