@@ -65,14 +65,6 @@ git push heroku master
 
 2. [python3 virtualenv](https://stackoverflow.com/questions/23842713/using-python-3-in-virtualenv)
 
-3. [react-bootstrap](https://react-bootstrap.github.io/)
+3. [liranfar/flask-react-on-heroku - used to set up framework](https://github.com/liranfar/flask-react-on-heroku)
 
-4. [react-scrollable-anchor](https://github.com/gabergg/react-scrollable-anchor)
-
-5. [google-maps-react](https://github.com/fullstackreact/google-maps-react)
-
-6. [Sahil Diwan - flask and postgres on heroku](http://blog.sahildiwan.com/posts/flask-and-postgresql-app-deployed-on-heroku/)
-
-7. [Setting up flask app in heroku with a database](https://gist.github.com/mayukh18/2223bc8fc152631205abd7cbf1efdd41/)
-
-8. [Testeimonials Carousel](https://codepen.io/jamy/pen/gbdWGJ)
+4. [z11i/pysat - used to computer clauses and generate graph info](https://github.com/z11i/pysat)
