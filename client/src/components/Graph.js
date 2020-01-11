@@ -21,13 +21,12 @@ class Graph extends Component {
             () => d3.transition("main")
             .ease(d3.easeLinear)
             .delay(500)
-            .duration(1000)
+            .duration(500)
           )
-          .logEvents(true)
           .on("initEnd", this.setGraph);
     this.setState({graphviz})
   }
-  
+
   componentDidUpdate() {
     this.setGraph();
   }

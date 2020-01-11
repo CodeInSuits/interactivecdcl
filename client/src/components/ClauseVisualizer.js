@@ -12,6 +12,7 @@ class ClauseVisualizer extends Component {
       clauseStrs: props.clauseInfo.data.clauses,
       graphStrs: props.clauseInfo.data.stepGraphs,
       contIndices: props.clauseInfo.data.contIndices,
+      isSat: props.clauseInfo.data.isSat,
       graphIndex: 0
     };
   }
@@ -49,57 +50,60 @@ class ClauseVisualizer extends Component {
   }
 
   render() {
-      return (
-        <div className="clause-visualizer">
-          <div className="clause-strs-wrapper">
-            <div className="clause-strs-container">
-              <div className="clause-strs">
-                {Object.entries(this.state.clauseStrs).map(([key, value]) => 
-                  <div key={key}>
-                    <label>{key}</label>&nbsp;&nbsp;&nbsp;
-                    <label>{value}</label>
-                  </div>
-                )}
+    if (this.state.graphIndex===(this.state.graphStrs.length-1)) {
+      alert(this.state.isSat ? 'SAT' : 'UNSAT');
+    }
+    return (
+      <div className="clause-visualizer">
+        <div className="clause-strs-wrapper">
+          <div className="clause-strs-container">
+            <div className="clause-strs">
+              {Object.entries(this.state.clauseStrs).map(([key, value]) => 
+                <div key={key}>
+                  <label>{key}</label>&nbsp;&nbsp;&nbsp;
+                  <label>{value}</label>
+                </div>
+              )}
+            </div>
+            <div className="clause-strs-button-container">
+              <Button bsStyle="primary" onClick={this.props.onResetClauseClick}>
+                Reset clause
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="graph-wrapper">
+          <div className="graph-container">
+            <Graph 
+              className="graph"
+              dotStr={this.state.graphStrs[this.state.graphIndex]}
+            />
+            <div className="graph-button-container">    
+              <div>
+                <Button bsStyle="primary" onClick={() => this.prevContinue()} disabled={this.state.graphIndex<=this.state.contIndices[0]}>
+                  {'<< Prev Continue'}
+                </Button>
               </div>
-              <div className="clause-strs-button-container">
-                <Button bsStyle="primary" onClick={this.props.onResetClauseClick}>
-                  Reset clause
+              <div>
+                <Button bsStyle="primary" onClick={() => this.prevStep()} disabled={this.state.graphIndex===0}>
+                  {'< Prev Step'}
+                </Button>
+              </div>
+              <div>
+                <Button bsStyle="primary" onClick={() => this.nextStep()} disabled={this.state.graphIndex===(this.state.graphStrs.length-1)}>
+                  {'Next Step >'}
+                </Button>
+              </div>
+              <div>
+                <Button bsStyle="primary" onClick={() => this.nextContinue()} disabled={this.state.graphIndex>=this.state.contIndices[this.state.contIndices.length-1]}>
+                  {'Next Continue >>'}
                 </Button>
               </div>
             </div>
           </div>
-          <div className="graph-wrapper">
-            <div className="graph-container">
-              <Graph 
-                className="graph"
-                dotStr={this.state.graphStrs[this.state.graphIndex]}
-              />
-              <div className="graph-button-container">    
-                <div>
-                  <Button bsStyle="primary" onClick={() => this.prevContinue()} disabled={this.state.graphIndex<=this.state.contIndices[0]}>
-                    {'<< Prev Continue'}
-                  </Button>
-                </div>
-                <div>
-                  <Button bsStyle="primary" onClick={() => this.prevStep()} disabled={this.state.graphIndex===0}>
-                    {'< Prev Step'}
-                  </Button>
-                </div>
-                <div>
-                  <Button bsStyle="primary" onClick={() => this.nextStep()} disabled={this.state.graphIndex===(this.state.graphStrs.length-1)}>
-                    {'Next Step >'}
-                  </Button>
-                </div>
-                <div>
-                  <Button bsStyle="primary" onClick={() => this.nextContinue()} disabled={this.state.graphIndex>=this.state.contIndices[this.state.contIndices.length-1]}>
-                    {'Next Continue >>'}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      );
+      </div>
+    );
   }
 }
 
