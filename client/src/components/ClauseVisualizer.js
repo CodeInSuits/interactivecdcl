@@ -12,6 +12,7 @@ class ClauseVisualizer extends Component {
       clauseStrs: props.clauseInfo.data.clauses,
       graphStrs: props.clauseInfo.data.stepGraphs,
       contIndices: props.clauseInfo.data.contIndices,
+      confClauses: props.clauseInfo.data.confClauses,
       isSat: props.clauseInfo.data.isSat,
       graphIndex: 0
     };
@@ -29,10 +30,27 @@ class ClauseVisualizer extends Component {
     }));
   }
 
+  adjustConflictClauses() {
+    let conflictClauses = [];
+    let conflictIndex = 0;
+    for (let i = 0; i < this.state.contIndices.length-1; i++) {
+      if (this.state.contIndices[i]<=this.state.graphIndex) {
+        conflictClauses.push(
+          <div className="conflict-clause" key={`conflict${conflictIndex}`}>
+            <Label bsStyle="warning">{`conflict${conflictIndex+1}`}</Label>
+            <Well bsSize="small">{this.state.confClauses[conflictIndex]}</Well>
+          </div>
+        );
+        conflictIndex++
+      }
+    }
+    return conflictClauses;
+  }
+
   prevContinue() {
     for (let i = this.state.contIndices.length-1; i >= 0; i--) {
       if (this.state.contIndices[i]<this.state.graphIndex) {
-        console.log("prev continue to step " + this.state.contIndices[i]);
+        // console.log("prev continue to step " + this.state.contIndices[i]);
         this.setState({graphIndex: this.state.contIndices[i]});
         return;
       }
@@ -42,7 +60,7 @@ class ClauseVisualizer extends Component {
   nextContinue() {
     for (let i = 0; i < this.state.contIndices.length; i++) {
       if (this.state.contIndices[i]>this.state.graphIndex) {
-        console.log("next continue to step " + this.state.contIndices[i]);
+        // console.log("next continue to step " + this.state.contIndices[i]);
         this.setState({graphIndex: this.state.contIndices[i]});
         return;
       }
@@ -85,6 +103,7 @@ class ClauseVisualizer extends Component {
         <div className="clause-strs-wrapper">
           <div className="clause-strs-container">
             <div className="clause-strs">
+              {this.adjustConflictClauses()}
               {Object.entries(this.state.clauseStrs).map(([key, value]) => 
                 <div className="clause-pair" key={key}>
                   <Label bsStyle="info">{key}</Label>
@@ -114,6 +133,7 @@ class ClauseVisualizer extends Component {
                 <OverlayTrigger placement="top" overlay={prevContButtonTooltip}>
                   <Button 
                     bsStyle="primary" 
+                    onClick={() => this.prevContinue()}
                     disabled={this.state.graphIndex<=this.state.contIndices[0]}>
                     {'<< Prev Continue'}
                   </Button>

@@ -8,7 +8,7 @@ class TerminalWindow extends Component {
     this.state = {
       prompts : [`Welcome to Interactive CDCL!
       \n
-      To skip introduction, press Enter key.
+      To skip introduction/text animation, press Enter key.
       \n
       To add a clause, type 'add [CLAUSE]' (e.g. add x1 or not x2 or x5).
       \n
@@ -41,7 +41,7 @@ class TerminalWindow extends Component {
       const clauses = parsedValue.slice(1);
       const clause = clauses.join(' ');
 
-      console.log(clause)
+      // console.log(clause)
 
 
       if (!clause || clause.replace(/\s/g, '').length === 0) {

@@ -33,14 +33,14 @@ class App extends Component {
   }
 
   handleUserInput (userInput) {
-    console.log(userInput)
+    // console.log(userInput)
   }
 
   async onSubmit(values) {
     const response = await postClauses(values);
     // const response = await postClauses(this.parseForm(values));
     if(response.data.status==='success') {
-      console.log(response)
+      // console.log(response)
       this.visualizeClauses(response);
     }
     else{

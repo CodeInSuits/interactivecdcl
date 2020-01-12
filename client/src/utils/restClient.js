@@ -2,13 +2,13 @@ import axios from 'axios'
 
 // function that pings server for testing
 export function pingServer(logMessage) {
-    console.log(logMessage);
+    // console.log(logMessage);
     axios.get('/ping')
     .then(function (response) {
-        console.log('SUCCESS', response);
+        // console.log('SUCCESS', response);
     })
     .catch(function (error) {
-        console.log('ERROR', error);
+        // console.log('ERROR', error);
     });
 }
 
@@ -19,7 +19,7 @@ export async function getDotStr() {
         return response.data.data;
     }
     catch (err) {
-        console.log('Error', err)
+        // console.log('Error', err)
     }
 }
 
@@ -30,7 +30,7 @@ export async function postClauses(clauses) {
         return response;
     }
     catch (err) {
-        console.log('Error', err)
+        // console.log('Error', err)
     }
 }
  

@@ -91,9 +91,11 @@ def get_clauses():
     print('input is ', 'SAT' if isSat else 'UNSAT')
     step_graphs = list(solver.graphs)
     cont_indices = list(solver.continue_idx)
+    conf_clauses = list(solver.conf_clauses)
     #fakeGraphs = ['digraph  {2 [label = "x2=F @ 0"]; 1 [label = "x1=T @ 0"]; }', 'digraph {a -> b}', 'digraph {c -> d}', 'digraph {e -> f}']
     print('graphs generated: ', step_graphs)
     print('continue indices: ', cont_indices)
+    print('conflict clauses:', conf_clauses)
     try:
         if request.method == "POST":
             return jsonify({
@@ -101,6 +103,7 @@ def get_clauses():
                 'clauses': req_data,
                 'stepGraphs': step_graphs,
                 'contIndices': cont_indices,
+                'confClauses': conf_clauses,
                 'isSat': isSat
             })
     except Exception as e:

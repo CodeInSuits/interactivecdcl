@@ -12,7 +12,7 @@ class ClauseGraph extends Component {
   }
   
   setGraph() {
-    console.log('In Graph component DOT source =', this.props.dotStr);
+    // console.log('In Graph component DOT source =', this.props.dotStr);
     this.state.graphviz.renderDot(this.props.dotStr);
   }
   componentDidMount() {
