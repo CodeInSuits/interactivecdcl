@@ -8,6 +8,10 @@ from pkg.utils.constants import TRUE, FALSE, UNASSIGN
 from pkg.utils.exceptions import FileFormatError
 from pkg.utils.logger import set_logger
 
+STR_NODE = 'x{}'
+STR_NEG_NODE = 'not x{}'
+STR_CLS_DELIMITER = ' or '
+
 DOT_DELIMITER = '; '
 DOT_NODE_FMT = '{} [label = "x{}={} @ {}"]'
 DOT_CONFLICT_NODE = 'K'
@@ -102,7 +106,7 @@ class Solver:
                     return False
                 self.learnts.add(learnt)
                 self.numbered_clauses[learnt] = self.curr_clause
-                self.conf_clauses.append(learnt)
+                self.record_conf_cls(learnt)
                 self.curr_clause += 1
                 self.backtrack(lvl)
                 self.record_graph_state()
@@ -133,6 +137,15 @@ class Solver:
         logger.fine('indices of continue: %s', self.continue_idx)
         logger.fine('all learned conflict clauses: %s', self.conf_clauses)
         return True
+
+    def record_conf_cls(self, cls):
+        # Convert clause to human parsable version
+        converted = deque()
+        for var in cls:
+            node = STR_NEG_NODE.format(abs(var)) if var < 0 else STR_NODE.format(var)
+            converted.append(node)
+        converted = STR_CLS_DELIMITER.join(converted)
+        self.conf_clauses.append(converted)
 
     def record_graph_state(self):
         graph = deque()
