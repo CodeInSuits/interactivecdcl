@@ -16,7 +16,7 @@ In the top level of interactivecdcl, run:
 
 ```
 $ virtualenv -p python3 venv
-$ source ./venv/bin/activate # to activate virtual environment
+$ source ./venv/bin/activate # to activate virtual environment(source ./venv/bin/activate.fish if using fish command line)
 $ pip install -r requirements.txt
 ```
 
