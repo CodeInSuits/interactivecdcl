@@ -53,6 +53,7 @@ class Solver:
         self.graphs = deque()
         self.curr_lvl_graph = dict()
         self.continue_idx = deque()
+        self.conf_clauses = deque()
         # self.numbered_clauses
         # self.curr_clause
 
@@ -101,6 +102,7 @@ class Solver:
                     return False
                 self.learnts.add(learnt)
                 self.numbered_clauses[learnt] = self.curr_clause
+                self.conf_clauses.append(learnt)
                 self.curr_clause += 1
                 self.backtrack(lvl)
                 self.record_graph_state()
@@ -129,6 +131,7 @@ class Solver:
             logger.fine('[%d]: %s', i, self.graphs[i])
         logger.fine('===\n')
         logger.fine('indices of continue: %s', self.continue_idx)
+        logger.fine('all learned conflict clauses: %s', self.conf_clauses)
         return True
 
     def record_graph_state(self):
