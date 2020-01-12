@@ -95,7 +95,7 @@ class TerminalWindow extends Component {
     }
 
     else {
-      this.setState(prevState => ({ prompts : [...prevState.prompts, "Invalid command."] }));
+      this.setState(prevState => ({ prompts : [...prevState.prompts, "Invalid command. Type 'help' to see your available options."] }));
     }
   }
 

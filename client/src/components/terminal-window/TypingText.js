@@ -61,7 +61,7 @@ class TypingText extends Component {
       <div className="typing-text" ref={this.textRef}>
         { this.state.typedText && this.state.typedText.split('\n').map((text, index) =>
           {
-            return <div key={index}>{ text }</div>
+            return <div className="text" key={index}>{ text }</div>
           }
         )}
       </div>

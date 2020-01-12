@@ -1,15 +1,13 @@
 .clause-visualizer {
     position: relative;
     height: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .clause-visualizer .clause-strs-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
     padding: 20px;
-    width: 300px;
+    width: 30%;
     height: 100%;
 }
 
@@ -29,6 +27,8 @@
 .clause-strs-container .clause-strs {
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
+    overflow-x: hidden;
     height: 90%;
 }
 
@@ -45,8 +45,8 @@
 }
 
 .clause-visualizer .graph-wrapper {
-    width: 100%;
-    padding: 20px 20px 20px 300px;
+    width: 70%;
+    padding: 20px;
     height: 100%;
 }
 
