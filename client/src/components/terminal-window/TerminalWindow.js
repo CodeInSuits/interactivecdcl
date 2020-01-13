@@ -19,6 +19,7 @@ class TerminalWindow extends Component {
       Once you're done, type 'run' to compute current clauses and visualize the implication graph.
       \n
       If you need help, type 'help'.`],
+      commands : [],
     }
     this.validateUserInput = this.validateUserInput.bind(this);
   }
@@ -27,6 +28,8 @@ class TerminalWindow extends Component {
     const validClause = /^ *(?:not )?x\d+(?: or (?:not )?x\d+)* *$/;
     const parsedValue = value.trim().split(/\s+/);
     const command = parsedValue[0].toLowerCase();
+
+    this.setState(prevState => ({ commands : [...prevState.commands, value]}));
 
     if (value.trim().toLowerCase() === 'run') {
       if (JSON.stringify(this.props.clauses) === '{}') {
@@ -112,6 +115,8 @@ class TerminalWindow extends Component {
               <CommandLineText
                 key={`prompt-${index}`}
                 prompt={prompt}
+                commandNum={index}
+                commands={this.state.commands}
                 blink={index === this.state.prompts.length - 1}
                 handleUserInput={this.validateUserInput}
               />

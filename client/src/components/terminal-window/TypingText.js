@@ -32,11 +32,7 @@ class TypingText extends Component {
       this.setState(prevState => (
         {
           typedText : prevState.typedText + prevState.fullText.charAt(prevState.index),
-          index : prevState.index + 1
-        })
-      );
-      this.setState(prevState => (
-        {
+          index : prevState.index + 1,
           timeOuts : [...prevState.timeOuts, setTimeout(this.typingText, 20)],
         })
       );

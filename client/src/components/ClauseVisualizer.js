@@ -16,6 +16,48 @@ class ClauseVisualizer extends Component {
       isSat: props.clauseInfo.data.isSat,
       graphIndex: 0
     };
+    this.clauseRef = React.createRef();
+    this.dragMouseDown = this.dragMouseDown.bind(this);
+    this.elementDrag = this.elementDrag.bind(this);
+    this.closeDragElement = this.closeDragElement.bind(this);
+    this.pos1 = this.pos2 = this.pos3 = this.pos4 = 0;
+  }
+
+  componentDidMount () {
+    this.clauseRef.current.onmousedown = this.dragMouseDown;
+  }
+
+  dragMouseDown (e) {
+    e = e || window.event;
+    e.preventDefault();
+    // this.setState({ pos3 : e.clientX, pos4 : e.clientY });
+    this.pos3 = e.clientX;
+    this.pos4 = e.clientY;
+    document.onmouseup = this.closeDragElement;
+    document.onmousemove = this.elementDrag;
+  }
+
+  elementDrag (e) {
+    e = e || window.event;
+    e.preventDefault();
+    // this.setState(prevState => ({
+    //   pos1 : prevState.pos3 - e.clientX,
+    //   pos2 : prevState.pos4 - e.clientY,
+    //   pos3 : e.clientX,
+    //   pos4 : e.clientY,
+    // }));
+    this.pos1 = this.pos3 - e.clientX;
+    this.pos2 = this.pos4 - e.clientY;
+    this.pos3 = e.clientX;
+    this.pos4 = e.clientY;
+    this.clauseRef.current.style.top = (this.clauseRef.current.offsetTop - this.pos2) + "px";
+    this.clauseRef.current.style.left = (this.clauseRef.current.offsetLeft - this.pos1) + "px";
+  }
+
+  closeDragElement () {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
   }
 
   prevStep() {
@@ -100,7 +142,12 @@ class ClauseVisualizer extends Component {
     );
     return (
       <div className="clause-visualizer">
-        <div className="clause-strs-wrapper">
+        <div className="clause-strs-wrapper" ref={this.clauseRef}>
+          <div className="clause-strs-container-header">
+              <div className="title">
+                Clauses
+              </div>
+          </div>
           <div className="clause-strs-container">
             <div className="clause-strs">
               {this.adjustConflictClauses()}
@@ -123,6 +170,11 @@ class ClauseVisualizer extends Component {
           </div>
         </div>
         <div className="graph-wrapper">
+          <div className="graph-container-header">
+              <div className="title">
+                Interactive CDCL | Results
+              </div>
+          </div>
           <div className="graph-container">
             <ClauseGraph 
               className="graph"

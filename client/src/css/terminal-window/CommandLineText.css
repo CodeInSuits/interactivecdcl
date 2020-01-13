@@ -5,3 +5,10 @@
   outline: none;
   padding-right: 15px;
 }
+
+textarea.command-line-user-input {
+  border: 0;
+  padding: 0;
+  resize: none;
+  background-color: transparent;
+}

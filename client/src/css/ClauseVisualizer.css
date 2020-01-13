@@ -1,40 +1,71 @@
 .clause-visualizer {
     position: relative;
     height: 100%;
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
 }
 
 .clause-visualizer .clause-strs-wrapper {
-    padding: 20px;
-    width: 30%;
-    height: 100%;
+    cursor: move;
+    position: fixed;
+    z-index: 1;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+    max-width: 90vw;
 }
 
 .clause-visualizer .clause-strs-wrapper .clause-strs-container {
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 300px;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 20px;
+    background-color: #ffffff;
+    border: solid 1px rgb(166,166,166);
+    border-top: 0;
+    border-radius: 0 0 1rem 1rem;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    word-wrap: break-word;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 10px;
+    /* padding: 20px;
     background-color: #ffffff;
     border-radius: 1rem;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); */
 }
+
+.clause-strs-container-header {
+    width: 100%;
+    height: 24px;
+    border-radius: 1rem 1rem 0 0;
+    border: solid 1px rgb(166,166,166);
+    background-color: rgb(242,242,242);
+  }
+  
+  .clause-strs-container-header .title {
+    color: #000000;
+    font-size: 14px;
+    font-family: 'Dosis', sans-serif;
+    letter-spacing: 2px;
+    margin-left: 8px;
+    margin-top: 2px;
+  }
 
 .clause-strs-container .clause-strs {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 90%;
+    height: 200px;
 }
 
 .clause-strs-container .clause-strs-button-container {
     position: absolute;
-    height: 10%;
+    width: 100%;
     bottom: 0;
     right: 0;
     left: 0;
@@ -42,23 +73,47 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .clause-visualizer .graph-wrapper {
-    width: 70%;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    width: 100%;
     height: 100%;
+    padding: 20px;
 }
 
 .clause-visualizer .graph-wrapper .graph-container {
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex-grow: 1;
+    height: 80vh;
     padding: 20px;
     background-color: #ffffff;
-    border-radius: 1rem;
+    border-radius: 0 0 1rem 1rem;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    border: solid 1px rgb(166,166,166);
+    border-top: 0;
+}
+
+.graph-container-header {
+    width: 100%;
+    height: 40px;
+    border-radius: 1rem 1rem 0 0;
+    border: solid 1px rgb(166,166,166);
+    background-color: rgb(242,242,242);
+}
+
+.graph-container-header .title {
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Dosis', sans-serif;
+    letter-spacing: 2px;
+    margin-left: 8px;
+    margin-top: 8px;
 }
 
 .graph-container .graph {
@@ -70,7 +125,7 @@
 
 .graph-container .graph-button-container {
     position: absolute;
-    height: 10%;
+    width: 100%;
     bottom: 0;
     right: 0;
     left: 0;
@@ -78,9 +133,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
-@media (max-width: 900px) {
+/* @media (max-width: 900px) {
     .clause-visualizer .clause-strs-wrapper {
         width: 230px;
     }
@@ -98,4 +154,4 @@
     .clause-visualizer .graph-wrapper {
         padding: 20px 20px 20px 200px;
     }
-}
+} */
