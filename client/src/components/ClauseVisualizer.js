@@ -14,7 +14,8 @@ class ClauseVisualizer extends Component {
       contIndices: props.clauseInfo.data.contIndices,
       confClauses: props.clauseInfo.data.confClauses,
       isSat: props.clauseInfo.data.isSat,
-      graphIndex: 0
+      graphIndex: 0,
+      // confClausesRef: []
     };
     this.clauseRef = React.createRef();
     this.dragMouseDown = this.dragMouseDown.bind(this);
@@ -27,10 +28,20 @@ class ClauseVisualizer extends Component {
     this.clauseRef.current.onmousedown = this.dragMouseDown;
   }
 
+  // componentDidUpdate () {
+  //   const refsLength = this.state.confClausesRef.length;
+  //   if (refsLength !== 0) {
+  //     this.state.confClausesRef[refsLength-1].current.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'end',
+  //       inline: "nearest"
+  //     });
+  //   }
+  // }
+
   dragMouseDown (e) {
     e = e || window.event;
     e.preventDefault();
-    // this.setState({ pos3 : e.clientX, pos4 : e.clientY });
     this.pos3 = e.clientX;
     this.pos4 = e.clientY;
     document.onmouseup = this.closeDragElement;
@@ -40,12 +51,6 @@ class ClauseVisualizer extends Component {
   elementDrag (e) {
     e = e || window.event;
     e.preventDefault();
-    // this.setState(prevState => ({
-    //   pos1 : prevState.pos3 - e.clientX,
-    //   pos2 : prevState.pos4 - e.clientY,
-    //   pos3 : e.clientX,
-    //   pos4 : e.clientY,
-    // }));
     this.pos1 = this.pos3 - e.clientX;
     this.pos2 = this.pos4 - e.clientY;
     this.pos3 = e.clientX;
@@ -60,6 +65,28 @@ class ClauseVisualizer extends Component {
     document.onmousemove = null;
   }
 
+  adjustConflictClauses() {
+    let conflictClauses = [];
+    // let confClausesRef = [];
+    let conflictIndex = 0;
+    const clausesLength = Object.entries(this.state.clauseStrs).length;
+    for (let i = 0; i < this.state.contIndices.length-1; i++) {
+      if (this.state.contIndices[i]<=this.state.graphIndex) {
+        // const ref = React.createRef();
+        conflictClauses.push(
+          <div className="conflict-clause" key={`conflict${conflictIndex}`}>
+            <Label bsStyle="warning">{`conflict - clause${clausesLength+conflictIndex+1}`}</Label>
+            <Well bsSize="small">{this.state.confClauses[conflictIndex]}</Well>
+          </div>
+        );
+        // confClausesRef.push(ref);
+        conflictIndex++
+      }
+    }
+    // this.setState({confClausesRef});
+    return conflictClauses;
+  }
+
   prevStep() {
     this.setState(prevState => ({ 
       graphIndex: prevState.graphIndex - 1
@@ -70,23 +97,6 @@ class ClauseVisualizer extends Component {
     this.setState(prevState => ({ 
       graphIndex: prevState.graphIndex + 1
     }));
-  }
-
-  adjustConflictClauses() {
-    let conflictClauses = [];
-    let conflictIndex = 0;
-    for (let i = 0; i < this.state.contIndices.length-1; i++) {
-      if (this.state.contIndices[i]<=this.state.graphIndex) {
-        conflictClauses.push(
-          <div className="conflict-clause" key={`conflict${conflictIndex}`}>
-            <Label bsStyle="warning">{`conflict${conflictIndex+1}`}</Label>
-            <Well bsSize="small">{this.state.confClauses[conflictIndex]}</Well>
-          </div>
-        );
-        conflictIndex++
-      }
-    }
-    return conflictClauses;
   }
 
   prevContinue() {
@@ -150,13 +160,13 @@ class ClauseVisualizer extends Component {
           </div>
           <div className="clause-strs-container">
             <div className="clause-strs">
-              {this.adjustConflictClauses()}
               {Object.entries(this.state.clauseStrs).map(([key, value]) => 
                 <div className="clause-pair" key={key}>
                   <Label bsStyle="info">{key}</Label>
                   <Well bsSize="small">{value}</Well>
                 </div>
               )}
+              {this.adjustConflictClauses()}
             </div>
             <div className="clause-strs-button-container">
               <OverlayTrigger placement="top" overlay={resetButtonTooltip}>
