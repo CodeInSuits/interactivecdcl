@@ -8,8 +8,9 @@ class TerminalWindow extends Component {
     this.state = {
       prompts : [`Welcome to Interactive CDCL! To skip introduction, press Enter key.
       \n
-      This is a CDCL SAT solver that illustrates the implication graphs of given CNF clauses. It's built 
-      by Jace Lu and Lisa Jian as final project for Princeton COS 516 (Automated Reasoning about Software) taught by professor Aarti!
+      ---
+      \n
+      This is a CDCL SAT solver that illustrates the implication graphs of given CNF clauses. It's built by Jace Lu and Lisa Jian as final project for Princeton COS 516 (Automated Reasoning about Software) taught by professor Aarti!
       \n 
       ---
       \n
