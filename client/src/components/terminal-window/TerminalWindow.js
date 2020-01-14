@@ -6,9 +6,11 @@ class TerminalWindow extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      prompts : [`Welcome to Interactive CDCL!
+      prompts : [`Welcome to Interactive CDCL! To skip introduction/text animation, press Enter key.
       \n
-      To skip introduction/text animation, press Enter key.
+      This is a CDCL SAT solver that illustrates the implication graphs of given CNF clauses.
+      \n
+      It's built by Jace and Lisa as final project for Princeton COS 516(Automated Reasoning about Software) taught by professor Aarti!
       \n
       To add a clause, type 'add [CLAUSE]' (e.g. add x1 or not x2 or x5).
       \n
