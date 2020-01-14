@@ -11,33 +11,36 @@ class ClauseVisualizer extends Component {
     this.state = {
       clauseStrs: props.clauseInfo.data.clauses,
       graphStrs: props.clauseInfo.data.stepGraphs,
-      contIndices: props.clauseInfo.data.contIndices,
+      contIndices: props.clauseInfo.data.contIndices.slice(0, props.clauseInfo.data.contIndices.length - 1),
       confClauses: props.clauseInfo.data.confClauses,
       isSat: props.clauseInfo.data.isSat,
       graphIndex: 0,
-      // confClausesRef: []
     };
     this.clauseRef = React.createRef();
     this.dragMouseDown = this.dragMouseDown.bind(this);
     this.elementDrag = this.elementDrag.bind(this);
     this.closeDragElement = this.closeDragElement.bind(this);
     this.pos1 = this.pos2 = this.pos3 = this.pos4 = 0;
+
+    this.conflictRefs = [];
+
+    for (let i = 0; i < props.clauseInfo.data.contIndices.length - 1; i++) {
+      this.conflictRefs.push(React.createRef());
+    }
   }
 
   componentDidMount () {
     this.clauseRef.current.onmousedown = this.dragMouseDown;
   }
 
-  // componentDidUpdate () {
-  //   const refsLength = this.state.confClausesRef.length;
-  //   if (refsLength !== 0) {
-  //     this.state.confClausesRef[refsLength-1].current.scrollIntoView({
-  //       behavior: 'smooth',
-  //       block: 'end',
-  //       inline: "nearest"
-  //     });
-  //   }
-  // }
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.graphIndex !== this.state.graphIndex) {
+      const position = this.state.contIndices.indexOf(this.state.graphIndex);
+      if (position >= 0) {
+        this.conflictRefs[position].current.scrollIntoView();
+      }
+    }
+  }
 
   dragMouseDown (e) {
     e = e || window.event;
@@ -63,28 +66,6 @@ class ClauseVisualizer extends Component {
     /* stop moving when mouse button is released:*/
     document.onmouseup = null;
     document.onmousemove = null;
-  }
-
-  adjustConflictClauses() {
-    let conflictClauses = [];
-    // let confClausesRef = [];
-    let conflictIndex = 0;
-    const clausesLength = Object.entries(this.state.clauseStrs).length;
-    for (let i = 0; i < this.state.contIndices.length-1; i++) {
-      if (this.state.contIndices[i]<=this.state.graphIndex) {
-        // const ref = React.createRef();
-        conflictClauses.push(
-          <div className="conflict-clause" key={`conflict${conflictIndex}`}>
-            <Label bsStyle="warning">{`conflict - clause${clausesLength+conflictIndex+1}`}</Label>
-            <Well bsSize="small">{this.state.confClauses[conflictIndex]}</Well>
-          </div>
-        );
-        // confClausesRef.push(ref);
-        conflictIndex++
-      }
-    }
-    // this.setState({confClausesRef});
-    return conflictClauses;
   }
 
   prevStep() {
@@ -150,6 +131,7 @@ class ClauseVisualizer extends Component {
         {`These CNF clauses have a result of ${this.state.isSat ? "SAT" : "UNSAT"}`}
       </Popover>
     );
+
     return (
       <div className="clause-visualizer">
         <div className="clause-strs-wrapper" ref={this.clauseRef}>
@@ -166,7 +148,17 @@ class ClauseVisualizer extends Component {
                   <Well bsSize="small">{value}</Well>
                 </div>
               )}
-              {this.adjustConflictClauses()}
+              { this.state.contIndices.map((clause, index) =>
+                <div style={{ visibility : clause > this.state.graphIndex ? 'hidden' : 'initial', height : clause > this.state.graphIndex ? '0' : 'auto' }} 
+                     className="conflict-clause" 
+                     key={`conflict${index}`} 
+                     ref={this.conflictRefs[index]}>
+                  <Label bsStyle="warning">
+                    {`conflict - clause${Object.entries(this.state.clauseStrs).length+index+1}`}
+                  </Label>
+                  <Well bsSize="small">{this.state.confClauses[index]}</Well>
+                </div>
+              )}
             </div>
             <div className="clause-strs-button-container">
               <OverlayTrigger placement="top" overlay={resetButtonTooltip}>
@@ -196,7 +188,7 @@ class ClauseVisualizer extends Component {
                   <Button 
                     bsStyle="primary" 
                     onClick={() => this.prevContinue()}
-                    disabled={this.state.graphIndex<=this.state.contIndices[0]}>
+                    disabled={this.state.contIndices.length===0 || this.state.graphIndex<=this.state.contIndices[0]}>
                     {'<< Prev Continue'}
                   </Button>
                 </OverlayTrigger>
@@ -233,7 +225,7 @@ class ClauseVisualizer extends Component {
                   <Button 
                     bsStyle="primary" 
                     onClick={() => this.nextContinue()} 
-                    disabled={this.state.graphIndex>=this.state.contIndices[this.state.contIndices.length-1]}>
+                    disabled={this.state.contIndices.length===0 || this.state.graphIndex>=this.state.contIndices[this.state.contIndices.length-1]}>
                     {'Next Continue >>'}
                   </Button>
                 </OverlayTrigger>          
